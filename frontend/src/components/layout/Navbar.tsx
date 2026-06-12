@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
+import { CATEGORY_LABELS } from '../../types';
 
 const Navbar: React.FC = () => {
   const { count, toggleCart } = useCart();
@@ -56,31 +57,58 @@ const Navbar: React.FC = () => {
             </span>
           </Link>
 
-          {/* CENTER: Navigation links — HOME CATEGORIES SHOP ALL FAQs */}
+          {/* CENTER: Navigation links with CATEGORIES dropdown on hover */}
           <nav className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path || (link.path.startsWith('/#') && location.hash === link.path.substring(1));
               return (
-                <a
-                  key={link.name}
-                  href={link.path}
-                  onClick={(e) => {
-                    if (link.path.startsWith('/#')) {
-                      e.preventDefault();
-                      if (location.pathname !== '/') {
-                        navigate(link.path);
-                      } else {
-                        const el = document.getElementById(link.path.substring(2));
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }
-                  }}
-                  className={`text-[11px] font-artisan-body font-bold tracking-[0.2em] transition-colors hover:text-artisan-highlight ${
-                    isActive ? 'text-artisan-highlight' : 'text-artisan-subtle'
-                  }`}
-                >
-                  {link.name}
-                </a>
+                <div key={link.name} className="relative group py-2">
+                  {link.path.startsWith('/#') ? (
+                    <a
+                      href={link.path}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (location.pathname !== '/') {
+                          navigate(link.path);
+                        } else {
+                          const el = document.getElementById(link.path.substring(2));
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className={`text-[11px] font-artisan-body font-bold tracking-[0.2em] transition-colors hover:text-artisan-highlight ${
+                        isActive ? 'text-artisan-highlight' : 'text-artisan-subtle'
+                      }`}
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.path}
+                      className={`text-[11px] font-artisan-body font-bold tracking-[0.2em] transition-colors hover:text-artisan-highlight ${
+                        isActive ? 'text-artisan-highlight' : 'text-artisan-subtle'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  )}
+
+                  {/* Animated Category Dropdown connected with DB categories */}
+                  {link.name === 'CATEGORIES' && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-64 bg-white border border-artisan-subtle/10 shadow-lg py-3 opacity-0 -translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                      <div className="flex flex-col">
+                        {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                          <Link
+                            key={key}
+                            to={`/products?category=${key}`}
+                            className="px-5 py-2.5 text-[10px] font-artisan-body font-bold text-artisan-subtle hover:text-artisan-highlight hover:bg-artisan-bg transition-colors tracking-widest uppercase text-left"
+                          >
+                            {label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
@@ -152,27 +180,62 @@ const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden w-full bg-artisan-card border-t border-artisan-subtle/10 mt-3 py-6 px-6 animate-fade-in shadow-inner">
           <div className="flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.path}
-                onClick={(e) => {
-                  setMobileMenuOpen(false);
-                  if (link.path.startsWith('/#')) {
-                    e.preventDefault();
-                    if (location.pathname !== '/') {
-                      navigate(link.path);
-                    } else {
-                      const el = document.getElementById(link.path.substring(2));
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }
-                }}
-                className="text-[12px] font-artisan-body font-bold tracking-[0.2em] text-artisan-subtle hover:text-artisan-highlight py-2"
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              if (link.path.startsWith('/#')) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.path}
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      e.preventDefault();
+                      if (location.pathname !== '/') {
+                        navigate(link.path);
+                      } else {
+                        const el = document.getElementById(link.path.substring(2));
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="text-[12px] font-artisan-body font-bold tracking-[0.2em] text-artisan-subtle hover:text-artisan-highlight py-2"
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+
+              if (link.name === 'CATEGORIES') {
+                return (
+                  <div key={link.name} className="flex flex-col">
+                    <span className="text-[12px] font-artisan-body font-bold tracking-[0.2em] text-artisan-highlight py-2">
+                      CATEGORIES
+                    </span>
+                    <div className="pl-4 flex flex-col gap-2 border-l border-artisan-subtle/10 mt-1 mb-2">
+                      {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                        <Link
+                          key={key}
+                          to={`/products?category=${key}`}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="text-[11px] font-artisan-body font-semibold tracking-wider text-artisan-subtle hover:text-artisan-highlight py-1"
+                        >
+                          {label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-[12px] font-artisan-body font-bold tracking-[0.2em] text-artisan-subtle hover:text-artisan-highlight py-2"
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
