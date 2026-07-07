@@ -133,7 +133,11 @@ const startServer = async (): Promise<void> => {
       console.error('⚠️ [Migration] Failed to migrate legacy orders:', migErr);
     }
 
-    await verifyEmailConnection();
+    try {
+      await verifyEmailConnection();
+    } catch (emailErr) {
+      console.warn('⚠️ [Warning] Email service connection failed to verify:', (emailErr as Error).message);
+    }
     configureCloudinary();
 
     const startPort = parseInt(process.env.PORT ?? '5001', 10);

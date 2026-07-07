@@ -36,7 +36,7 @@ const ReturnsExchanges: React.FC = () => {
             <div className="w-8 h-8 rounded-full bg-navy-mid flex items-center justify-center font-playfair font-bold text-electric shrink-0 border border-fm-gold/30">1</div>
             <div>
               <h4 className="font-dm font-bold text-white mb-1 uppercase text-sm tracking-widest">Lodge Complaint</h4>
-              <p className="font-dm text-sm text-white-2">Contact our WhatsApp hotline (0301-7967300) sharing your Order ID and attached proof images depicting the current state.</p>
+              <p className="font-dm text-sm text-white-2">Contact our WhatsApp hotline (+923007709173) sharing your Order ID and attached proof images depicting the current state.</p>
             </div>
           </div>
           <div className="flex items-start gap-4">
