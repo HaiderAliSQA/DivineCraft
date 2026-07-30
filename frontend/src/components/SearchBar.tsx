@@ -4,15 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
   { label: 'All Categories', value: '' },
-  { label: 'Chargers', value: 'chargers' },
-  { label: 'Hands Free', value: 'hands-free' },
-  { label: 'Data Cables', value: 'data-cables' },
-  { label: 'Mobile Covers', value: 'mobile-covers' },
-  { label: 'Memory Cards', value: 'memory-cards' },
-  { label: 'Power Banks', value: 'power-banks' },
-  { label: 'Glass Protectors', value: 'glass-protectors' },
-  { label: 'Selfie Sticks', value: 'selfie-sticks' },
-  { label: 'Bluetooth', value: 'bluetooth' },
+  { label: 'Wax Candles', value: 'wax-candles' },
+  { label: 'Resin Art', value: 'resin-art' },
+  { label: 'Wooden Ware', value: 'wooden-ware' },
+  { label: 'Studio Ceramics', value: 'studio-ceramics' },
+  { label: 'Macrame Hangings', value: 'macrame-hangings' },
+  { label: 'Leather Journals', value: 'leather-journals' },
+  { label: 'Terracotta Ware', value: 'terracotta-ware' },
+  { label: 'Pressed Flowers', value: 'pressed-flowers' },
   { label: 'Other Accessories', value: 'other-accessories' },
 ];
 

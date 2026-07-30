@@ -83,7 +83,7 @@ const OrderConfirmation: React.FC = () => {
   const firstName = getFirstName(order.ownerName || '');
 
   return (
-    <div className="min-h-screen bg-navy-dark pt-20 sm:pt-24 pb-10 px-4">
+    <div className="min-h-screen bg-artisan-bg text-artisan-text pt-24 pb-16 px-4 font-artisan-body">
       {/* Dynamic Embedded Premium Animations */}
       <style>{`
         .check-circle {
@@ -95,12 +95,10 @@ const OrderConfirmation: React.FC = () => {
           animation: drawCheck 0.5s ease-in-out 0.4s forwards;
         }
         .btn-animated-pulse {
-          animation: pulseGlow 2s infinite alternate;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .btn-animated-pulse:hover {
           transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 0 25px rgba(14, 165, 233, 0.8) !important;
         }
         .btn-animated-pulse:active {
           transform: translateY(1px) scale(0.98);
@@ -111,8 +109,6 @@ const OrderConfirmation: React.FC = () => {
         }
         .btn-continue-animated:hover {
           transform: translateY(-2px) scale(1.02);
-          background-color: rgba(255, 255, 255, 0.05) !important;
-          border-color: rgba(255, 255, 255, 0.2) !important;
         }
         .btn-continue-animated:active {
           transform: translateY(1px) scale(0.98);
@@ -124,14 +120,6 @@ const OrderConfirmation: React.FC = () => {
         }
         @keyframes drawCheck {
           to { stroke-dashoffset: 0; }
-        }
-        @keyframes pulseGlow {
-          0% {
-            box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
-          }
-          100% {
-            box-shadow: 0 0 18px rgba(14, 165, 233, 0.7);
-          }
         }
         @media print {
           /* Hide all non-essential web and interactive features */
@@ -166,146 +154,118 @@ const OrderConfirmation: React.FC = () => {
           }
           
           /* Elegant Ink-Saving Cards & Borders */
-          .bg-navy-mid {
+          .bg-artisan-card {
             background: #ffffff !important;
             color: #000000 !important;
             border: 1px solid #e2e8f0 !important;
-            border-radius: 12px !important;
             padding: 12px !important;
             box-shadow: none !important;
           }
           
-          .bg-navy-dark\/50 {
+          .bg-artisan-bg {
             background: #f8fafc !important;
             border: 1px solid #e2e8f0 !important;
           }
           
-          .border-white\/5 {
+          .border-artisan-subtle\/10 {
             border-color: #e2e8f0 !important;
           }
           
-          .divide-white\/5 > * + * {
+          .divide-artisan-subtle\/10 > * + * {
             border-color: #e2e8f0 !important;
-          }
-          
-          /* Force standard dark ink colors */
-          h1, h2, h3, h4, .text-white {
-            color: #000000 !important;
-          }
-          
-          .text-gray-400, .text-gray-500, .text-gray-600 {
-            color: #475569 !important;
-          }
-          
-          .text-electric {
-            color: #0f172a !important;
-            font-weight: 800 !important;
-          }
-          
-          .bg-navy-dark {
-            background: #f1f5f9 !important;
-            border: 1px solid #e2e8f0 !important;
-          }
-          
-          .border-t {
-            border-top-color: #e2e8f0 !important;
-          }
-          .border-b {
-            border-bottom-color: #e2e8f0 !important;
           }
         }
       `}</style>
 
-      <div className="max-w-4xl mx-auto space-y-4">
+      <div className="max-w-4xl mx-auto space-y-6">
         
         {/* Print-Only Premium Invoice Header */}
         <div className="hidden print:flex items-center justify-between border-b-2 border-slate-200 pb-3 mb-2">
           <div>
-            <h1 className="text-xl font-black uppercase tracking-tight text-slate-900 flex items-center">
-              <span className="text-slate-800 mr-1.5">FH</span> Mobile Accessories
+            <h1 className="text-xl font-bold uppercase tracking-tight text-slate-900 flex items-center">
+              DIVINECRAFT
             </h1>
-            <p className="text-[9px] text-slate-600 font-extrabold uppercase tracking-[0.2em]">Wholesale Store</p>
+            <p className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.2em]">Artisan Craft Store</p>
           </div>
           <div className="text-right">
-            <h2 className="text-sm font-black text-slate-900 uppercase tracking-wider">ORDER INVOICE</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">ORDER INVOICE</h2>
             <p className="text-[8px] text-slate-500 font-bold uppercase">Customer & Shop Copy</p>
           </div>
         </div>
 
         {/* Shukriya Hero Header */}
-        <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-8 text-center relative overflow-hidden shadow-glow-blue/5">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-electric/5 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-6 md:p-10 text-center relative overflow-hidden shadow-sm">
           
           {/* Glowing Animated Success Checkmark */}
-          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 check-circle shadow-[0_0_20px_rgba(16,185,129,0.1)] no-print">
-            <svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-5 check-circle no-print">
+            <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path className="check-path" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
           {/* Personalized Shukriya Greetings */}
-          <h1 className="font-heading text-white text-2xl md:text-4xl font-black uppercase tracking-tight mb-1">
+          <h1 className="font-artisan-heading text-artisan-primary text-2xl md:text-4xl font-normal uppercase tracking-wider mb-2">
             SHUKRIYA {firstName} BHAI!
           </h1>
-          <p className="text-electric text-[10px] font-extrabold uppercase tracking-[0.25em] mb-2">
+          <p className="text-artisan-highlight text-[10px] font-bold uppercase tracking-[0.25em] mb-4">
             Order Placed Successfully
           </p>
-          <p className="text-gray-400 text-xs md:text-sm font-medium tracking-wide max-w-lg mx-auto leading-relaxed border-t border-white/5 pt-3 no-print">
+          <p className="text-artisan-subtle text-xs md:text-sm font-medium tracking-wide max-w-lg mx-auto leading-relaxed border-t border-artisan-subtle/10 pt-4 no-print">
             Aapka order receive ho gaya — hum jald dispatch karein ge. Niche di gayi details check kar lein.
           </p>
           
           {/* Confirmation Meta Details */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mt-4 p-4 bg-navy-dark/50 border border-white/5 rounded-2xl">
+          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6 p-4 bg-artisan-bg border border-artisan-subtle/10 rounded-none">
             <div>
-              <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Confirmation Number</p>
-              <p className="text-white font-extrabold text-sm tracking-tight">{order.orderId}</p>
+              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest mb-0.5">Confirmation Number</p>
+              <p className="text-artisan-primary font-bold text-sm tracking-tight">{order.orderId}</p>
             </div>
             <div>
-              <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Order Date</p>
-              <p className="text-white font-extrabold text-sm tracking-tight">{formattedDate}</p>
+              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest mb-0.5">Order Date</p>
+              <p className="text-artisan-primary font-bold text-sm tracking-tight">{formattedDate}</p>
             </div>
           </div>
         </div>
 
         {/* Purchase Summary Table */}
-        <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-8 space-y-4">
-          <h3 className="font-heading text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-white/5 pb-2.5">
+        <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-6 md:p-10 space-y-4 shadow-sm">
+          <h3 className="font-artisan-heading text-xs font-bold text-artisan-subtle uppercase tracking-widest border-b border-artisan-subtle/10 pb-3">
             Review Items
           </h3>
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-artisan-subtle/10">
             {order.items.map((item: any, idx: number) => (
-              <div key={idx} className="flex gap-4 items-center py-3 first:pt-0 last:pb-0">
-                <div className="w-14 h-14 bg-navy-dark rounded-xl border border-white/5 p-1.5 shrink-0 flex items-center justify-center">
+              <div key={idx} className="flex gap-4 items-center py-4 first:pt-0 last:pb-0">
+                <div className="w-14 h-14 bg-artisan-bg rounded-none border border-artisan-subtle/10 p-1.5 shrink-0 flex items-center justify-center">
                   <img src={item.image || '/placeholder-product.png'} alt={item.name} className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-white uppercase truncate">{item.name}</h4>
-                  <div className="flex gap-3 mt-0.5 text-[9px] text-gray-500 font-bold uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-artisan-primary uppercase truncate">{item.name}</h4>
+                  <div className="flex gap-3 mt-1 text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">
                     <span>QTY: {item.quantity}</span>
                     {item.size && <span>Size: {item.size}</span>}
                     {item.color && <span>Color: {item.color}</span>}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-extrabold text-white">{formatPrice(item.price * item.quantity)}</p>
-                  <p className="text-[9px] text-gray-600 font-medium uppercase mt-0.5">{formatPrice(item.price)} each</p>
+                  <p className="text-xs font-bold text-artisan-primary">Rs. {formatPrice(item.price * item.quantity)}</p>
+                  <p className="text-[9px] text-artisan-subtle font-medium uppercase mt-0.5">Rs. {formatPrice(item.price)} each</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Pricing Calculations */}
-          <div className="pt-4 border-t border-white/5 space-y-2 max-w-sm ml-auto">
-            <div className="flex justify-between text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+          <div className="pt-4 border-t border-artisan-subtle/10 space-y-2 max-w-sm ml-auto">
+            <div className="flex justify-between text-[10px] font-bold text-artisan-subtle uppercase tracking-widest">
               <span>Subtotal Summary</span>
-              <span className="text-white font-extrabold">
-                {formatPrice(order.subtotal)}
-                {(order.deliveryFee ?? 0) > 0 && <span className="text-[9px] text-gray-600 lowercase ml-1"> + {formatPrice(order.deliveryFee ?? 0)} tcs</span>}
+              <span className="text-artisan-primary font-bold text-xs">
+                Rs. {formatPrice(order.subtotal)}
+                {(order.deliveryFee ?? 0) > 0 && <span className="text-[9px] text-artisan-subtle lowercase ml-1"> + Rs. {formatPrice(order.deliveryFee ?? 0)} tcs</span>}
               </span>
             </div>
-            <div className="flex justify-between items-center text-base font-black text-white uppercase tracking-tight mt-2 pt-2 border-t border-white/5">
+            <div className="flex justify-between items-center text-xs font-bold text-artisan-primary uppercase tracking-wider mt-3 pt-3 border-t border-artisan-subtle/10">
               <span>Grand Total</span>
-              <span className="text-electric font-black text-lg">{formatPrice(order.totalAmount)}</span>
+              <span className="text-artisan-highlight font-bold text-xl">Rs. {formatPrice(order.totalAmount)}</span>
             </div>
           </div>
         </div>
@@ -314,86 +274,86 @@ const OrderConfirmation: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Logistics block */}
-          <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-6 space-y-3 no-print">
-            <div className="flex items-center gap-3 text-electric">
-              <span className="w-8 h-8 rounded-lg bg-electric/10 flex items-center justify-center text-sm shadow-glow-blue/5">🚚</span>
-              <h3 className="font-heading text-xs font-bold text-white uppercase tracking-widest">TCS Express Delivery</h3>
+          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 no-print shadow-sm">
+            <div className="flex items-center gap-3 text-artisan-highlight">
+              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">🚚</span>
+              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">TCS Express Delivery</h3>
             </div>
             <div className="space-y-1">
-              <p className="text-base font-black text-white tracking-tight">{deliveryRange}</p>
-              <p className="text-[9px] text-gray-400 font-medium uppercase tracking-wider leading-relaxed">
+              <p className="text-sm font-bold text-artisan-primary tracking-wide">{deliveryRange}</p>
+              <p className="text-[9px] text-artisan-subtle font-medium uppercase tracking-wider leading-relaxed">
                 AAPKA PARCEL TCS COURIER KE ZARIYE DELIVER HOGA. TRACKING NUMBER DISPATCH KE BAAD WHATSAPP PER BHEJA JAEGA.
               </p>
             </div>
           </div>
 
           {/* Shipping Address Block */}
-          <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-6 space-y-3">
-            <div className="flex items-center gap-3 text-electric">
-              <span className="w-8 h-8 rounded-lg bg-electric/10 flex items-center justify-center text-sm shadow-glow-blue/5">📍</span>
-              <h3 className="font-heading text-xs font-bold text-white uppercase tracking-widest">Shipping Address</h3>
+          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 shadow-sm">
+            <div className="flex items-center gap-3 text-artisan-highlight">
+              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">📍</span>
+              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Shipping Address</h3>
             </div>
-            <div className="space-y-2 text-[10px] font-bold uppercase tracking-wider">
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-gray-500">Name</span>
-                <span className="text-white">{order.ownerName}</span>
+            <div className="space-y-2 text-[9px] font-bold uppercase tracking-wider">
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+                <span className="text-artisan-subtle">Name</span>
+                <span className="text-artisan-primary">{order.ownerName}</span>
               </div>
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-gray-500">Phone</span>
-                <span className="text-white">{order.phone}</span>
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+                <span className="text-artisan-subtle">Phone</span>
+                <span className="text-artisan-primary">{order.phone}</span>
               </div>
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-gray-500">City</span>
-                <span className="text-white">{order.city}</span>
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+                <span className="text-artisan-subtle">City</span>
+                <span className="text-artisan-primary">{order.city}</span>
               </div>
               <div className="flex justify-between pt-0.5">
-                <span className="text-gray-500">Shop Name</span>
-                <span className="text-white text-right max-w-[200px] truncate">{order.shopName}</span>
+                <span className="text-artisan-subtle">Shop Name</span>
+                <span className="text-artisan-primary text-right max-w-[200px] truncate">{order.shopName}</span>
               </div>
             </div>
           </div>
 
           {/* Payment Status Block */}
-          <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-6 space-y-3 flex flex-col justify-between">
+          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 flex flex-col justify-between shadow-sm">
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-electric">
-                <span className="w-8 h-8 rounded-lg bg-electric/10 flex items-center justify-center text-sm shadow-glow-blue/5">💵</span>
-                <h3 className="font-heading text-xs font-bold text-white uppercase tracking-widest">Payment</h3>
+              <div className="flex items-center gap-3 text-artisan-highlight">
+                <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">💵</span>
+                <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Payment</h3>
               </div>
               <div className="space-y-1">
-                <p className="text-base font-black text-white tracking-tight">CASH ON DELIVERY</p>
-                <p className="text-[9px] text-gray-500 font-extrabold uppercase tracking-widest">STATUS: PENDING</p>
+                <p className="text-sm font-bold text-artisan-primary tracking-wide">CASH ON DELIVERY</p>
+                <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest">STATUS: PENDING</p>
               </div>
             </div>
-            <div className="p-3 bg-navy-dark border border-white/5 rounded-xl mt-2">
-              <p className="text-[9px] text-electric font-semibold uppercase tracking-wider text-center leading-relaxed italic">
+            <div className="p-3 bg-artisan-bg border border-artisan-subtle/10 rounded-none mt-2">
+              <p className="text-[9px] text-artisan-highlight font-semibold uppercase tracking-wider text-center leading-relaxed italic">
                 "PKR {order.totalAmount.toLocaleString()} cash tayar rakhein delivery ke waqt."
               </p>
             </div>
           </div>
 
           {/* Concierge Support Block */}
-          <div className="bg-navy-mid border border-white/5 rounded-3xl p-5 md:p-6 space-y-3 no-print">
-            <div className="flex items-center gap-3 text-electric">
-              <span className="w-8 h-8 rounded-lg bg-electric/10 flex items-center justify-center text-sm shadow-glow-blue/5">☎️</span>
-              <h3 className="font-heading text-xs font-bold text-white uppercase tracking-widest">Concierge</h3>
+          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 no-print shadow-sm">
+            <div className="flex items-center gap-3 text-artisan-highlight">
+              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">☎️</span>
+              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Concierge</h3>
             </div>
             <div className="space-y-3">
-              <p className="text-[9px] text-gray-500 font-bold uppercase tracking-wider leading-relaxed">
+              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-wider leading-relaxed">
                 ORDER ASSISTANCE IS AVAILABLE 24/7.
               </p>
-              <div className="grid grid-cols-2 gap-2 font-heading">
+              <div className="grid grid-cols-2 gap-2">
                 <a 
                   href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '923007709173'}?text=Assalam-o-Alaikum, order ID *${order.orderId}* details check kar lein.`} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 py-2.5 rounded-xl font-black uppercase tracking-widest text-[8px] text-center border border-emerald-500/20 transition-all"
+                  className="bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] py-2.5 rounded-none font-bold uppercase tracking-widest text-[8px] text-center border border-[#25D366]/20 transition-all cursor-pointer"
                 >
                   WhatsApp Inquiry
                 </a>
                 <a 
                   href="tel:+923007709173" 
-                  className="bg-electric/10 hover:bg-electric/20 text-electric py-2.5 rounded-xl font-black uppercase tracking-widest text-[8px] text-center border border-electric/20 transition-all"
+                  className="bg-artisan-primary/10 hover:bg-artisan-primary/20 text-artisan-primary py-2.5 rounded-none font-bold uppercase tracking-widest text-[8px] text-center border border-artisan-primary/20 transition-all cursor-pointer"
                 >
                   Direct Call
                 </a>
@@ -407,13 +367,13 @@ const OrderConfirmation: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3 pt-4 no-print">
           <Link 
             to="/" 
-            className="btn-continue-animated flex-1 bg-navy-mid text-white font-heading font-black uppercase tracking-widest text-xs sm:text-sm py-4.5 sm:py-5 rounded-2xl text-center border border-white/5 shadow-glow-blue/5"
+            className="btn-continue-animated flex-1 bg-transparent text-artisan-primary font-bold uppercase tracking-widest text-xs py-4.5 rounded-none text-center border border-artisan-primary transition-all duration-300 hover:bg-artisan-primary hover:text-white"
           >
             Continue Shopping
           </Link>
           <button 
             onClick={() => window.print()}
-            className="btn-animated-pulse flex-1 bg-electric text-navy-dark font-heading font-black uppercase tracking-widest text-xs sm:text-sm py-4.5 sm:py-5 rounded-2xl text-center shadow-glow-blue"
+            className="btn-animated-pulse flex-1 bg-artisan-primary text-white font-bold uppercase tracking-widest text-xs py-4.5 rounded-none text-center transition-all duration-300 hover:bg-artisan-highlight cursor-pointer"
           >
             Print Receipt
           </button>

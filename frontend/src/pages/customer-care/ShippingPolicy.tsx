@@ -2,79 +2,71 @@ import React from 'react';
 
 const ShippingPolicy: React.FC = () => {
   return (
-    <div className="pt-24 pb-20 px-6 sm:px-6 lg:px-8 max-w-4xl mx-auto bg-fm-bg">
-      <h1 className="font-playfair text-4xl text-white mb-4 text-center">Shipping Policy</h1>
-      <p className="text-center font-dm text-white-2 mb-12">
-        To ensure a premium unboxing experience, all FH Mobile orders are quality checked and carefully packaged. 
-      </p>
+    <div className="pt-28 pb-20 px-6 sm:px-10 lg:px-16 max-w-4xl mx-auto bg-artisan-bg font-artisan-body text-artisan-text">
+      {/* Header */}
+      <div className="text-center mb-12">
+        <span className="text-[10px] font-bold text-artisan-highlight uppercase tracking-[0.25em]">DELIVERY DETAILS</span>
+        <h1 className="font-artisan-heading text-3xl md:text-5xl font-normal text-artisan-primary tracking-wide mt-2 mb-4">
+          Shipping Policy
+        </h1>
+        <p className="text-artisan-subtle text-xs md:text-sm font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
+          We want to make sure your items arrive safely and quickly. Here is everything you need to know about our shipping.
+        </p>
+      </div>
 
-      <div className="bg-navy-mid border border-navy-light p-8 lg:p-10 space-y-10">
+      {/* Content Card */}
+      <div className="bg-artisan-card border border-artisan-subtle/10 p-8 lg:p-12 space-y-10 shadow-sm">
         
-        {/* Delivery Time */}
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-electric">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </span>
-            <h2 className="font-playfair text-2xl text-white">Delivery Timelines</h2>
+        {/* Delivery Timelines */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-artisan-highlight text-xl">🚚</span>
+            <h2 className="font-artisan-heading text-xl md:text-2xl text-artisan-primary font-bold">Delivery Time</h2>
           </div>
-          <p className="font-dm text-white-2 leading-relaxed ml-9">
-            Our standard nationwide delivery typically takes <strong>3 to 5 working days</strong> from the moment your order is confirmed. Please note that during festive seasons or mega sales, dispatch procedures may encounter slight delays due to high order volumes.
+          <p className="text-sm text-artisan-subtle leading-relaxed pl-8">
+            Your package will reach your doorstep within **3 to 5 working days** after you confirm your order. 
+            During special holidays or huge sales, delivery might take a little longer.
           </p>
         </section>
 
         {/* Shipping Charges */}
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-electric">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-            </span>
-            <h2 className="font-playfair text-2xl text-white">Shipping Charges</h2>
+        <section className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-artisan-highlight text-xl">💵</span>
+            <h2 className="font-artisan-heading text-xl md:text-2xl text-artisan-primary font-bold">Delivery Charges</h2>
           </div>
-          <p className="font-dm text-white-2 leading-relaxed ml-9 mb-4">
-            We provide priority delivery across all serviceable regions in Pakistan. To simplify your shopping experience, we charge a <strong>standard flat-rate shipping fee of PKR 300</strong> on all orders nationwide.
+          <p className="text-sm text-artisan-subtle leading-relaxed pl-8 mb-3">
+            To make it simple, we charge a flat shipping fee of **Rs. 300** for all orders across Pakistan.
           </p>
-          <div className="ml-9 p-4 bg-[#f8f5f0] border-l-2 border-fm-gold font-dm text-white text-sm italic">
-            "No hidden costs. The PKR 300 flat fee covers priority handling and TCS courier services for your entire order."
+          <div className="ml-8 p-4 bg-artisan-bg border-l-2 border-artisan-highlight text-xs text-artisan-subtle italic">
+            "No hidden charges. The Rs. 300 fee covers secure packing and courier delivery for your entire order."
           </div>
         </section>
 
-        {/* Coverage */}
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-electric">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </span>
-            <h2 className="font-playfair text-2xl text-white">Areas Covered & Couriers</h2>
+        {/* Couriers */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-artisan-highlight text-xl">📍</span>
+            <h2 className="font-artisan-heading text-xl md:text-2xl text-artisan-primary font-bold">Courier Service</h2>
           </div>
-          <p className="font-dm text-white-2 leading-relaxed ml-9">
-            FH Mobile dispatches solely via <strong>TCS Logistics</strong> to ensure a trusted priority handling process across major cities. We deliver to every city, town, and postal code accessible strictly by major courier networks within Pakistan.
+          <p className="text-sm text-artisan-subtle leading-relaxed pl-8">
+            We send all our packages through **TCS Courier** to ensure they are handled with care and delivered safely to your address.
           </p>
         </section>
 
         {/* Cash on Delivery */}
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-electric">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </span>
-            <h2 className="font-playfair text-2xl text-white">Cash on Delivery (COD)</h2>
+        <section className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-artisan-highlight text-xl">📦</span>
+            <h2 className="font-artisan-heading text-xl md:text-2xl text-artisan-primary font-bold">Cash on Delivery (COD)</h2>
           </div>
-          <p className="font-dm text-white-2 leading-relaxed ml-9 mb-3">
-            Cash on Delivery is fully supported for all our accessory collections. 
+          <p className="text-sm text-artisan-subtle leading-relaxed pl-8 mb-2">
+            You can pay cash when the package is delivered. 
           </p>
-          <ul className="ml-9 list-disc pl-5 font-dm text-white-2 space-y-2">
-            <li>You must pay the exact invoice amount exclusively to the courier before accepting the package.</li>
-            <li>Opening the package before payment is physically restricted by courier regulations.</li>
-            <li>In case of refusal upon delivery, your account may be flagged for restricted prepaid-only orders in the future.</li>
+          <ul className="ml-8 list-disc pl-5 text-xs text-artisan-subtle space-y-2">
+            <li>Please pay the exact amount to the TCS rider before taking your package.</li>
+            <li>Riders cannot allow you to open the parcel before payment due to courier rules.</li>
+            <li>If you refuse to accept a confirmed order, you might not be allowed to choose Cash on Delivery for future purchases.</li>
           </ul>
         </section>
 

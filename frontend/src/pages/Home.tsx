@@ -124,8 +124,8 @@ const Home: React.FC = () => {
             ))}
           </div>
           
-          {/* 3-Column Masonry-Style Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* 5-Column Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {loadingActive ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <ProductSkeleton key={i} />

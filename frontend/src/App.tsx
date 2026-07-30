@@ -20,6 +20,7 @@ import ContactUs from './pages/customer-care/ContactUs';
 import ShippingPolicy from './pages/customer-care/ShippingPolicy';
 import ReturnsExchanges from './pages/customer-care/ReturnsExchanges';
 import TrackOrder from './pages/customer-care/TrackOrder';
+import AboutUs from './pages/customer-care/AboutUs';
 
 import { lazy, Suspense } from 'react';
 
@@ -119,6 +120,8 @@ const App: React.FC = () => {
         <Route path="/store/order-confirmation/:orderNumber" element={<Layout><OrderConfirmation /></Layout>} />
 
         <Route path="/contact" element={<Layout><ContactUs /></Layout>} />
+        <Route path="/contact-us" element={<Layout><ContactUs /></Layout>} />
+        <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
         <Route path="/shipping-policy" element={<Layout><ShippingPolicy /></Layout>} />
         <Route path="/returns-policy" element={<Layout><ReturnsExchanges /></Layout>} />
         <Route path="/track-order" element={<Layout><TrackOrder /></Layout>} />

@@ -19,6 +19,7 @@ import wholesalePaymentRoutes from './routes/wholesalePayments';
 import adminOrderRoutes from './routes/adminOrders';
 import adminPaymentRoutes from './routes/adminPayments';
 import adminDashboardRoutes from './routes/adminDashboard';
+import contactRoutes from './routes/contact';
 import errorHandler, { notFoundHandler } from './middleware/errorHandler';
 import customLogger from './middleware/customLogger';
 import { findFreePort, updateFrontendEnv } from './utils/port';
@@ -84,6 +85,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Wholesale / Admin B2B Routes
 app.use('/api/admin/shopkeepers', shopKeeperRoutes);

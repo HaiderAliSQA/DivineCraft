@@ -22,6 +22,8 @@ const ProductDetail: React.FC = () => {
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isDescHovered, setIsDescHovered] = useState(false);
+  const [isDescClicked, setIsDescClicked] = useState(false);
 
   // Reset quantity and main image index when slug changes to avoid state carryover
   React.useEffect(() => {
@@ -80,7 +82,7 @@ const ProductDetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           
           {/* Gallery */}
-          <div className="lg:col-span-7 flex flex-col md:flex-row gap-4">
+          <div className="lg:col-span-7 flex flex-col md:flex-row gap-4 items-start">
             {/* Thumbnails */}
             <div className="flex flex-row md:flex-col gap-3 order-2 md:order-1 overflow-x-auto no-scrollbar md:h-[500px]">
               {product.images.map((img: string, i: number) => (
@@ -132,9 +134,41 @@ const ProductDetail: React.FC = () => {
             </div>
 
             <div className="space-y-6 pt-6 border-t border-white/5">
-              <p className="text-gray-400 text-base leading-relaxed">
-                {product.description}
-              </p>
+              <div 
+                className="relative transition-all duration-300"
+                onMouseEnter={() => setIsDescHovered(true)}
+                onMouseLeave={() => setIsDescHovered(false)}
+              >
+                {product.description.length > 250 ? (
+                  <div>
+                    <p className="text-gray-400 text-base leading-relaxed inline">
+                      {isDescClicked || isDescHovered 
+                        ? product.description 
+                        : `${product.description.slice(0, 250)}... `}
+                    </p>
+                    {!isDescHovered && !isDescClicked && (
+                      <button 
+                        onClick={() => setIsDescClicked(true)}
+                        className="text-electric hover:underline text-xs font-bold uppercase tracking-wider ml-1 cursor-pointer inline-block"
+                      >
+                        read more
+                      </button>
+                    )}
+                    {isDescClicked && (
+                      <button 
+                        onClick={() => setIsDescClicked(false)}
+                        className="text-electric hover:underline text-xs font-bold uppercase tracking-wider ml-2 cursor-pointer inline-block"
+                      >
+                        read less
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-base leading-relaxed">
+                    {product.description}
+                  </p>
+                )}
+              </div>
 
               {/* Compatible Models Badge */}
               {product.compatibleModels && product.compatibleModels.length > 0 && (
@@ -209,7 +243,7 @@ const ProductDetail: React.FC = () => {
             <h2 className="font-heading text-2xl md:text-3xl font-extrabold text-white mb-10 uppercase text-center tracking-tight">
               You May Also <span className="text-electric">Like</span>
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {relatedProducts.map((p: any) => <ProductCard key={p._id} product={p} />)}
             </div>
           </div>

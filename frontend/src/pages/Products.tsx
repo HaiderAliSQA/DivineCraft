@@ -8,12 +8,15 @@ import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const SIDEBAR_CATEGORIES = [
   { value: '',                  label: 'All Products' },
-  { value: 'chargers',          label: 'Chargers' },
-  { value: 'hands-free',        label: 'Hands Free' },
-  { value: 'mobile-covers',     label: 'Mobile Covers' },
-  { value: 'data-cables',       label: 'Data Cables' },
-  { value: 'power-banks',       label: 'Power Banks' },
-  { value: 'glass-protectors',  label: 'Glass Protectors' },
+  { value: 'wax-candles',       label: 'Wax Candles' },
+  { value: 'resin-art',         label: 'Resin Art' },
+  { value: 'wooden-ware',       label: 'Wooden Ware' },
+  { value: 'studio-ceramics',   label: 'Studio Ceramics' },
+  { value: 'macrame-hangings',  label: 'Macrame Hangings' },
+  { value: 'leather-journals',  label: 'Leather Journals' },
+  { value: 'terracotta-ware',   label: 'Terracotta Ware' },
+  { value: 'pressed-flowers',   label: 'Pressed Flowers' },
+  { value: 'other-accessories', label: 'Other Accessories' },
 ];
 
 const SORTS = [
@@ -199,11 +202,11 @@ const Products: React.FC = () => {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
               {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
               {products.map((product) => <ProductCard key={product._id} product={product} />)}
             </div>
           ) : (

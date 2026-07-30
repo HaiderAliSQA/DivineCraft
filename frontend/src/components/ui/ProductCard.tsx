@@ -71,12 +71,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
 
   return (
     <div 
-      className="group relative flex flex-col bg-artisan-card border border-artisan-subtle/10 rounded-none overflow-hidden transition-all duration-300" 
+      className="group relative flex flex-col h-full w-full max-w-[260px] mx-auto bg-artisan-card border border-artisan-subtle/10 rounded-none overflow-hidden transition-all duration-300" 
       style={{ transitionDelay: `${(index || 0) * 0.05}s` }}
     >
-      <Link to={`/product/${product.slug}`} className="w-full relative flex flex-col flex-1">
-        {/* TALL EDITORIAL IMAGE AREA */}
-        <div className="relative w-full aspect-[3/4] overflow-hidden bg-artisan-bg">
+      <Link to={`/product/${product.slug}`} className="w-full relative flex flex-col flex-1 h-full">
+        {/* SQUARE IMAGE AREA */}
+        <div className="relative w-full aspect-square overflow-hidden bg-artisan-bg">
           <img 
             src={product.images[0] || '/placeholder.png'} 
             alt={product.name} 
@@ -91,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
         </div>
 
         {/* INFO AREA */}
-        <div className="p-5 flex flex-col flex-1">
+        <div className="p-4 md:p-5 flex flex-col flex-1">
           {/* Category Label */}
           <span className="font-artisan-body text-[9px] font-bold uppercase tracking-widest text-artisan-highlight">
             {getCategoryLabel()}
@@ -114,11 +114,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
             )}
           </div>
           
+          {/* Flex spacer to push buttons to the bottom */}
+          <div className="flex-1 min-h-[16px]" />
+
           {/* Outlined Add to Cart Button */}
           {product.stock > 0 ? (
             <button 
               onClick={handleQuickAdd}
-              className="w-full mt-5 bg-transparent border border-artisan-primary text-artisan-primary font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3.5 hover:bg-artisan-primary hover:text-white transition-all duration-300 rounded-none cursor-pointer"
+              className="w-full mt-auto bg-transparent border border-artisan-primary text-artisan-primary font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 hover:bg-artisan-primary hover:text-white transition-all duration-300 rounded-none cursor-pointer"
               aria-label="Add to Cart"
             >
               Add to Cart
@@ -126,7 +129,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
           ) : (
             <button 
               disabled
-              className="w-full mt-5 bg-transparent border border-artisan-subtle/30 text-artisan-subtle/60 font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3.5 rounded-none cursor-not-allowed"
+              className="w-full mt-auto bg-transparent border border-artisan-subtle/30 text-artisan-subtle/60 font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 rounded-none cursor-not-allowed"
               title="Out of Stock"
             >
               SOLD OUT
