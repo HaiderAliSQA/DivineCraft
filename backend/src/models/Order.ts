@@ -78,7 +78,7 @@ const orderSchema = new Schema<IOrder>(
     phone: {
       type: String,
       required: [true, 'Phone number is required'],
-      match: [/^03[0-9]{9}$/, 'Phone must be a valid Pakistani number (03XXXXXXXXX)'],
+      match: [/^(03|923|\+923)[0-9]{9}$/, 'Phone must be a valid Pakistani number (e.g., 03001234567, +923001234567, or 923001234567)'],
       trim: true,
     },
     city: {

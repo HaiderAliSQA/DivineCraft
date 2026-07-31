@@ -83,7 +83,7 @@ const OrderConfirmation: React.FC = () => {
   const firstName = getFirstName(order.ownerName || '');
 
   return (
-    <div className="min-h-screen bg-artisan-bg text-artisan-text pt-24 pb-16 px-4 font-artisan-body">
+    <div className="min-h-screen bg-[#FAF8F5] text-artisan-text pt-4 md:pt-6 pb-20 px-4 font-artisan-body selection:bg-artisan-primary selection:text-white">
       {/* Dynamic Embedded Premium Animations */}
       <style>{`
         .check-circle {
@@ -95,23 +95,38 @@ const OrderConfirmation: React.FC = () => {
           animation: drawCheck 0.5s ease-in-out 0.4s forwards;
         }
         .btn-animated-pulse {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .btn-animated-pulse:hover {
-          transform: translateY(-2px) scale(1.02);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 25px rgba(61, 31, 13, 0.15);
         }
         .btn-animated-pulse:active {
-          transform: translateY(1px) scale(0.98);
+          transform: translateY(-1px);
         }
         
         .btn-continue-animated {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .btn-continue-animated:hover {
-          transform: translateY(-2px) scale(1.02);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 25px rgba(122, 106, 90, 0.1);
         }
         .btn-continue-animated:active {
-          transform: translateY(1px) scale(0.98);
+          transform: translateY(-1px);
+        }
+
+        @keyframes gradientText {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animated-gradient-text {
+          background: linear-gradient(270deg, #3D1F0D, #C1440E, #B8860B, #C1440E, #3D1F0D);
+          background-size: 400% 400%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: gradientText 6s ease infinite;
         }
         
         @keyframes scaleUp {
@@ -177,7 +192,7 @@ const OrderConfirmation: React.FC = () => {
         }
       `}</style>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6 animate-fade-up">
         
         {/* Print-Only Premium Invoice Header */}
         <div className="hidden print:flex items-center justify-between border-b-2 border-slate-200 pb-3 mb-2">
@@ -194,53 +209,53 @@ const OrderConfirmation: React.FC = () => {
         </div>
 
         {/* Shukriya Hero Header */}
-        <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-6 md:p-10 text-center relative overflow-hidden shadow-sm">
+        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
           
           {/* Glowing Animated Success Checkmark */}
-          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-5 check-circle no-print">
-            <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 check-circle no-print shadow-inner">
+            <svg className="w-10 h-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path className="check-path" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
           {/* Personalized Shukriya Greetings */}
-          <h1 className="font-artisan-heading text-artisan-primary text-2xl md:text-4xl font-normal uppercase tracking-wider mb-2">
+          <h1 className="font-artisan-heading animated-gradient-text text-4xl md:text-6xl font-extrabold uppercase tracking-wider mb-3 leading-tight">
             SHUKRIYA {firstName} BHAI!
           </h1>
-          <p className="text-artisan-highlight text-[10px] font-bold uppercase tracking-[0.25em] mb-4">
+          <p className="text-artisan-highlight text-sm font-extrabold uppercase tracking-[0.35em] mb-6 bg-artisan-highlight/10 border-2 border-artisan-highlight/30 py-2.5 px-6 rounded-full inline-block shadow-sm no-print">
             Order Placed Successfully
           </p>
-          <p className="text-artisan-subtle text-xs md:text-sm font-medium tracking-wide max-w-lg mx-auto leading-relaxed border-t border-artisan-subtle/10 pt-4 no-print">
+          <p className="text-slate-800 text-sm md:text-base font-bold tracking-wide max-w-xl mx-auto leading-relaxed border-t border-artisan-subtle/15 pt-6 no-print">
             Aapka order receive ho gaya — hum jald dispatch karein ge. Niche di gayi details check kar lein.
           </p>
           
           {/* Confirmation Meta Details */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6 p-4 bg-artisan-bg border border-artisan-subtle/10 rounded-none">
-            <div>
-              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest mb-0.5">Confirmation Number</p>
-              <p className="text-artisan-primary font-bold text-sm tracking-tight">{order.orderId}</p>
+          <div className="grid grid-cols-2 gap-6 max-w-md mx-auto mt-8 p-6 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl">
+            <div className="border-r border-artisan-subtle/10 pr-2">
+              <p className="text-[10px] text-artisan-subtle font-extrabold uppercase tracking-widest mb-1.5">Confirmation Number</p>
+              <p className="text-artisan-primary font-bold text-base tracking-tight">{order.orderId}</p>
             </div>
-            <div>
-              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest mb-0.5">Order Date</p>
-              <p className="text-artisan-primary font-bold text-sm tracking-tight">{formattedDate}</p>
+            <div className="pl-2">
+              <p className="text-[10px] text-artisan-subtle font-extrabold uppercase tracking-widest mb-1.5">Order Date</p>
+              <p className="text-artisan-primary font-bold text-base tracking-tight">{formattedDate}</p>
             </div>
           </div>
         </div>
 
         {/* Purchase Summary Table */}
-        <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-6 md:p-10 space-y-4 shadow-sm">
-          <h3 className="font-artisan-heading text-xs font-bold text-artisan-subtle uppercase tracking-widest border-b border-artisan-subtle/10 pb-3">
+        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-10 space-y-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <h3 className="font-artisan-heading text-xs font-bold text-artisan-subtle uppercase tracking-widest border-b border-artisan-subtle/10 pb-4">
             Review Items
           </h3>
           <div className="divide-y divide-artisan-subtle/10">
             {order.items.map((item: any, idx: number) => (
-              <div key={idx} className="flex gap-4 items-center py-4 first:pt-0 last:pb-0">
-                <div className="w-14 h-14 bg-artisan-bg rounded-none border border-artisan-subtle/10 p-1.5 shrink-0 flex items-center justify-center">
+              <div key={idx} className="flex gap-4 items-center py-5 first:pt-0 last:pb-0 group">
+                <div className="w-16 h-16 bg-[#FAF8F5] rounded-xl border border-artisan-subtle/10 p-2 shrink-0 flex items-center justify-center group-hover:border-artisan-primary transition-colors duration-300">
                   <img src={item.image || '/placeholder-product.png'} alt={item.name} className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-artisan-primary uppercase truncate">{item.name}</h4>
-                  <div className="flex gap-3 mt-1 text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-artisan-primary uppercase truncate group-hover:text-artisan-highlight transition-colors duration-300">{item.name}</h4>
+                  <div className="flex gap-4 mt-1.5 text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">
                     <span>QTY: {item.quantity}</span>
                     {item.size && <span>Size: {item.size}</span>}
                     {item.color && <span>Color: {item.color}</span>}
@@ -248,14 +263,14 @@ const OrderConfirmation: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-bold text-artisan-primary">Rs. {formatPrice(item.price * item.quantity)}</p>
-                  <p className="text-[9px] text-artisan-subtle font-medium uppercase mt-0.5">Rs. {formatPrice(item.price)} each</p>
+                  <p className="text-[9px] text-artisan-subtle font-medium uppercase mt-1">Rs. {formatPrice(item.price)} each</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Pricing Calculations */}
-          <div className="pt-4 border-t border-artisan-subtle/10 space-y-2 max-w-sm ml-auto">
+          <div className="pt-6 border-t border-artisan-subtle/10 space-y-3 max-w-sm ml-auto">
             <div className="flex justify-between text-[10px] font-bold text-artisan-subtle uppercase tracking-widest">
               <span>Subtotal Summary</span>
               <span className="text-artisan-primary font-bold text-xs">
@@ -263,97 +278,97 @@ const OrderConfirmation: React.FC = () => {
                 {(order.deliveryFee ?? 0) > 0 && <span className="text-[9px] text-artisan-subtle lowercase ml-1"> + Rs. {formatPrice(order.deliveryFee ?? 0)} tcs</span>}
               </span>
             </div>
-            <div className="flex justify-between items-center text-xs font-bold text-artisan-primary uppercase tracking-wider mt-3 pt-3 border-t border-artisan-subtle/10">
+            <div className="flex justify-between items-center text-xs font-bold text-artisan-primary uppercase tracking-wider mt-4 pt-4 border-t border-artisan-subtle/10">
               <span>Grand Total</span>
-              <span className="text-artisan-highlight font-bold text-xl">Rs. {formatPrice(order.totalAmount)}</span>
+              <span className="text-artisan-highlight font-bold text-2xl">Rs. {formatPrice(order.totalAmount)}</span>
             </div>
           </div>
         </div>
 
         {/* 2x2 Grid Blocks */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Logistics block */}
-          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 no-print shadow-sm">
-            <div className="flex items-center gap-3 text-artisan-highlight">
-              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">🚚</span>
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">🚚</span>
               <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">TCS Express Delivery</h3>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               <p className="text-sm font-bold text-artisan-primary tracking-wide">{deliveryRange}</p>
-              <p className="text-[9px] text-artisan-subtle font-medium uppercase tracking-wider leading-relaxed">
+              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-wider leading-relaxed">
                 AAPKA PARCEL TCS COURIER KE ZARIYE DELIVER HOGA. TRACKING NUMBER DISPATCH KE BAAD WHATSAPP PER BHEJA JAEGA.
               </p>
             </div>
           </div>
 
           {/* Shipping Address Block */}
-          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 shadow-sm">
-            <div className="flex items-center gap-3 text-artisan-highlight">
-              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">📍</span>
-              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Shipping Address</h3>
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">📍</span>
+              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Delivery Address</h3>
             </div>
-            <div className="space-y-2 text-[9px] font-bold uppercase tracking-wider">
-              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+            <div className="space-y-3 text-[10px] font-bold uppercase tracking-wider">
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">Name</span>
                 <span className="text-artisan-primary">{order.ownerName}</span>
               </div>
-              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">Phone</span>
                 <span className="text-artisan-primary">{order.phone}</span>
               </div>
-              <div className="flex justify-between border-b border-artisan-subtle/10 pb-1.5">
+              <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">City</span>
                 <span className="text-artisan-primary">{order.city}</span>
               </div>
-              <div className="flex justify-between pt-0.5">
-                <span className="text-artisan-subtle">Shop Name</span>
-                <span className="text-artisan-primary text-right max-w-[200px] truncate">{order.shopName}</span>
+              <div className="flex justify-between pt-1">
+                <span className="text-artisan-subtle shrink-0">Address</span>
+                <span className="text-artisan-primary text-right max-w-[200px] break-words">{order.shopName}</span>
               </div>
             </div>
           </div>
 
           {/* Payment Status Block */}
-          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 flex flex-col justify-between shadow-sm">
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-artisan-highlight">
-                <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">💵</span>
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">💵</span>
                 <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Payment</h3>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <p className="text-sm font-bold text-artisan-primary tracking-wide">CASH ON DELIVERY</p>
-                <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-widest">STATUS: PENDING</p>
+                <p className="text-[9px] text-artisan-subtle font-extrabold uppercase tracking-widest">STATUS: PENDING</p>
               </div>
             </div>
-            <div className="p-3 bg-artisan-bg border border-artisan-subtle/10 rounded-none mt-2">
-              <p className="text-[9px] text-artisan-highlight font-semibold uppercase tracking-wider text-center leading-relaxed italic">
+            <div className="p-4 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl mt-3 shadow-inner">
+              <p className="text-[10px] text-artisan-highlight font-extrabold uppercase tracking-wider text-center leading-relaxed italic">
                 "PKR {order.totalAmount.toLocaleString()} cash tayar rakhein delivery ke waqt."
               </p>
             </div>
           </div>
 
           {/* Concierge Support Block */}
-          <div className="bg-artisan-card border border-artisan-subtle/10 rounded-none p-5 md:p-6 space-y-3 no-print shadow-sm">
-            <div className="flex items-center gap-3 text-artisan-highlight">
-              <span className="w-8 h-8 rounded-none bg-artisan-bg flex items-center justify-center text-sm border border-artisan-subtle/5">☎️</span>
-              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Concierge</h3>
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">☎️</span>
+              <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Concierge Assistance</h3>
             </div>
-            <div className="space-y-3">
-              <p className="text-[9px] text-artisan-subtle font-bold uppercase tracking-wider leading-relaxed">
+            <div className="space-y-4">
+              <p className="text-[9px] text-artisan-subtle font-extrabold uppercase tracking-wider leading-relaxed">
                 ORDER ASSISTANCE IS AVAILABLE 24/7.
               </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <a 
                   href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '923007709173'}?text=Assalam-o-Alaikum, order ID *${order.orderId}* details check kar lein.`} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] py-2.5 rounded-none font-bold uppercase tracking-widest text-[8px] text-center border border-[#25D366]/20 transition-all cursor-pointer"
+                  className="bg-[#25D366]/10 hover:bg-[#25D366] hover:text-white text-[#25D366] py-3.5 rounded-xl font-bold uppercase tracking-widest text-[9px] text-center border border-[#25D366]/20 transition-all duration-300 cursor-pointer hover:shadow-md"
                 >
-                  WhatsApp Inquiry
+                  WhatsApp
                 </a>
                 <a 
                   href="tel:+923007709173" 
-                  className="bg-artisan-primary/10 hover:bg-artisan-primary/20 text-artisan-primary py-2.5 rounded-none font-bold uppercase tracking-widest text-[8px] text-center border border-artisan-primary/20 transition-all cursor-pointer"
+                  className="bg-artisan-primary/10 hover:bg-artisan-primary hover:text-white text-artisan-primary py-3.5 rounded-xl font-bold uppercase tracking-widest text-[9px] text-center border border-artisan-primary/20 transition-all duration-300 cursor-pointer hover:shadow-md"
                 >
                   Direct Call
                 </a>
@@ -364,16 +379,16 @@ const OrderConfirmation: React.FC = () => {
         </div>
 
         {/* Global Footer Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4 no-print">
+        <div className="flex flex-col sm:flex-row gap-4 pt-6 no-print">
           <Link 
             to="/" 
-            className="btn-continue-animated flex-1 bg-transparent text-artisan-primary font-bold uppercase tracking-widest text-xs py-4.5 rounded-none text-center border border-artisan-primary transition-all duration-300 hover:bg-artisan-primary hover:text-white"
+            className="btn-continue-animated flex-1 bg-white text-artisan-primary font-bold uppercase tracking-[0.2em] text-xs py-5 rounded-xl text-center border border-artisan-primary/20 hover:border-artisan-primary transition-all shadow-sm cursor-pointer"
           >
             Continue Shopping
           </Link>
           <button 
             onClick={() => window.print()}
-            className="btn-animated-pulse flex-1 bg-artisan-primary text-white font-bold uppercase tracking-widest text-xs py-4.5 rounded-none text-center transition-all duration-300 hover:bg-artisan-highlight cursor-pointer"
+            className="btn-animated-pulse flex-1 bg-artisan-primary hover:bg-artisan-highlight text-white font-bold uppercase tracking-[0.2em] text-xs py-5 rounded-xl text-center transition-all shadow-md cursor-pointer"
           >
             Print Receipt
           </button>

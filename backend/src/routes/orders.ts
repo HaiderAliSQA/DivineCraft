@@ -45,10 +45,10 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    if (!phone || !/^03[0-9]{9}$/.test(phone)) {
+    if (!phone || !/^(03|923|\+923)[0-9]{9}$/.test(phone)) {
       res.status(400).json({
         success: false,
-        message: 'Phone number must be a valid Pakistani number (03XXXXXXXXX)',
+        message: 'Phone number must be a valid Pakistani number (e.g., 03001234567, +923001234567, or 923001234567)',
       });
       return;
     }
