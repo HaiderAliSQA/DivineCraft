@@ -145,88 +145,64 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. TRUST BADGES (3 columns, light cream background) */}
-      <section className="py-20 bg-[#FAF0E6] border-y border-artisan-subtle/10">
+      {/* 5. TRUST BADGES (3 columns, light cream background, compacted & fully mobile responsive) */}
+      <section className="py-8 md:py-10 bg-[#FAF0E6] border-y border-artisan-subtle/10">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {trustBadges.map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-artisan-subtle/5">
+              <div key={i} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-3 sm:space-y-0 sm:space-x-4">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-artisan-subtle/5 shrink-0">
                   {item.icon}
                 </div>
-                <h3 className="font-artisan-heading text-lg font-bold text-artisan-primary tracking-wide">{item.title}</h3>
-                <p className="font-artisan-body text-artisan-subtle text-sm max-w-xs leading-relaxed">{item.desc}</p>
+                <div className="flex-1">
+                  <h3 className="font-artisan-heading text-sm font-bold text-artisan-primary tracking-wide">{item.title}</h3>
+                  <p className="font-artisan-body text-artisan-subtle text-xs leading-normal max-w-xs mx-auto sm:mx-0">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 6. FAQ SECTION (Accordion, clean white background) */}
-      <section id="faq" className="py-24 bg-white border-b border-artisan-subtle/10">
-        <div className="max-w-3xl mx-auto px-6">
-          
-          <div className="text-center mb-16">
-            <h2 className="font-artisan-heading text-3xl md:text-4xl font-normal text-artisan-primary tracking-wide">
-              Frequently Asked Questions
-            </h2>
-            <p className="font-artisan-body text-[11px] md:text-xs font-bold uppercase tracking-[0.25em] text-artisan-highlight mt-2">
-              Caring for Handcrafted Goods
-            </p>
-          </div>
+      {/* 6. FAQ SECTION (Accordion, clean white background, compacted, restructured & mobile responsive) */}
+      <section id="faq" className="py-10 md:py-16 bg-white border-b border-artisan-subtle/10">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+            <div className="md:col-span-1 text-center md:text-left">
+              <h2 className="font-artisan-heading text-xl sm:text-2xl md:text-3xl font-normal text-artisan-primary tracking-wide leading-tight">
+                Frequently Asked Questions
+              </h2>
+              <p className="font-artisan-body text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-artisan-highlight mt-2">
+                Caring for Handcrafted Goods
+              </p>
+            </div>
 
-          <div className="space-y-4">
-            {faqs.map((faq, index) => {
-              const isOpen = openFaq === index;
-              return (
-                <div key={index} className="border-b border-artisan-subtle/10 pb-4">
-                  <button
-                    onClick={() => toggleFaq(index)}
-                    className="w-full flex justify-between items-center text-left py-3.5 focus:outline-none group"
-                  >
-                    <span className="font-artisan-heading text-base md:text-lg text-artisan-primary font-medium group-hover:text-artisan-highlight transition-colors">
-                      {faq.q}
-                    </span>
-                    <span className="text-xl text-artisan-accent group-hover:text-artisan-highlight transition-colors ml-4 shrink-0">
-                      {isOpen ? '−' : '+'}
-                    </span>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-300 max-h-0 ${isOpen ? 'max-h-[200px]' : ''}`}>
-                    <p className="font-artisan-body text-sm text-artisan-subtle pb-4 pt-1 leading-relaxed">
-                      {faq.a}
-                    </p>
+            <div className="md:col-span-2 space-y-2 mt-6 md:mt-0">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <div key={index} className="border-b border-artisan-subtle/10 pb-3">
+                    <button
+                      onClick={() => toggleFaq(index)}
+                      className="w-full flex justify-between items-center text-left py-2.5 focus:outline-none group"
+                    >
+                      <span className="font-artisan-heading text-sm md:text-base text-artisan-primary font-medium group-hover:text-artisan-highlight transition-colors">
+                        {faq.q}
+                      </span>
+                      <span className="text-lg text-artisan-accent group-hover:text-artisan-highlight transition-colors ml-4 shrink-0">
+                        {isOpen ? '−' : '+'}
+                      </span>
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-300 max-h-0 ${isOpen ? 'max-h-[200px]' : ''}`}>
+                      <p className="font-artisan-body text-xs md:text-sm text-artisan-subtle pb-3 pt-1 leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-
-        </div>
-      </section>
-
-      {/* 7. NEWSLETTER (Rebranded) */}
-      <section className="py-24 bg-artisan-bg relative">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <span className="text-artisan-highlight font-artisan-body font-bold uppercase tracking-[0.3em] text-[10px] block mb-3">
-            STUDIO JOURNAL
-          </span>
-          <h2 className="font-artisan-heading text-3xl md:text-4xl font-normal text-artisan-primary mb-6 tracking-wide">
-            Join the Artisan Club
-          </h2>
-          <p className="font-artisan-body text-artisan-subtle mb-10 text-sm md:text-base leading-relaxed max-w-lg mx-auto">
-            Subscribe to receive stories of the local hands behind each creation, styling logs, and early access to new collections.
-          </p>
-          <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
-            <input 
-              type="email" 
-              placeholder="Enter your email address"
-              className="flex-1 bg-white border border-artisan-subtle/20 rounded-none px-6 py-4 text-artisan-text placeholder-artisan-subtle/60 focus:outline-none focus:border-artisan-primary font-artisan-body text-sm"
-              required
-            />
-            <button className="bg-artisan-primary hover:bg-artisan-highlight text-white px-10 py-4 font-artisan-body text-xs font-bold uppercase tracking-widest transition-all select-none cursor-pointer">
-              Subscribe
-            </button>
-          </form>
         </div>
       </section>
 
