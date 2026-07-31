@@ -39,8 +39,7 @@ const Checkout: React.FC = () => {
     },
   });
 
-  const totalQuantity = items.reduce((sum, item) => sum + Number(item.quantity), 0);
-  const isSingleItem = totalQuantity === 1;
+
 
   useEffect(() => {
     if (items.length === 0 && !isSuccess) {
@@ -49,12 +48,8 @@ const Checkout: React.FC = () => {
   }, [items, navigate, isSuccess]);
 
   useEffect(() => {
-    if (isSingleItem) {
-      setValue('paymentSchedule', 'immediate');
-    } else {
-      setValue('paymentSchedule', 'weekly');
-    }
-  }, [isSingleItem, setValue]);
+    setValue('paymentSchedule', 'immediate');
+  }, [setValue]);
 
   const onSubmit = async (data: CheckoutFormValues) => {
     try {
@@ -89,19 +84,8 @@ const Checkout: React.FC = () => {
   if (items.length === 0) return null;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-artisan-text pt-24 md:pt-32 pb-20 font-artisan-body selection:bg-artisan-primary selection:text-white">
+    <div className="min-h-screen bg-[#FAF8F5] text-artisan-text pt-6 md:pt-8 pb-20 font-artisan-body selection:bg-artisan-primary selection:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Progress Stepper / Header */}
-        <div className="flex flex-col items-center mb-12 md:mb-16 animate-fade-in">
-          <h1 className="font-artisan-heading text-artisan-primary text-4xl md:text-5xl font-normal tracking-wide mb-4 text-center">
-            Wholesale Checkout
-          </h1>
-          <div className="w-16 h-0.5 bg-artisan-primary/20 mb-4"></div>
-          <p className="text-artisan-subtle text-[10px] font-bold uppercase tracking-[0.25em] text-center max-w-md bg-white px-4 py-2 border border-artisan-subtle/10 rounded-full shadow-sm">
-            ⚡ Guest Checkout • No Password Required
-          </p>
-        </div>
 
         <div className="flex flex-col lg:flex-row gap-10 items-start">
 
@@ -111,12 +95,9 @@ const Checkout: React.FC = () => {
 
               {/* Section 1: Customer & Delivery Details */}
               <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-10 space-y-8 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="flex items-center gap-5 border-b border-artisan-subtle/10 pb-6">
-                  <span className="w-12 h-12 rounded-full bg-gradient-to-br from-artisan-primary to-artisan-primary/80 text-white flex items-center justify-center font-artisan-heading text-lg font-bold shadow-md shadow-artisan-primary/20 ring-4 ring-artisan-primary/10">1</span>
-                  <div>
-                    <h2 className="text-base font-artisan-heading font-bold text-artisan-primary uppercase tracking-wider">Customer & Delivery Details</h2>
-                    <p className="text-[10px] text-artisan-subtle font-medium uppercase tracking-wide mt-0.5">Please provide your delivery and contact details</p>
-                  </div>
+                <div className="flex flex-col items-center justify-center border-b border-artisan-subtle/10 pb-3 mb-2 text-center">
+                  <h2 className="text-xl font-black uppercase tracking-wider animate-text-glow font-artisan-heading">Customer & Delivery Details</h2>
+                  <p className="text-[12px] font-black uppercase tracking-wide mt-0.5 animate-text-glow">Please provide your delivery and contact details</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -208,53 +189,42 @@ const Checkout: React.FC = () => {
                 </div>
               </div>
 
-              {/* Section 2: Ledger Payment Schedule & Notes */}
-              <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-10 space-y-8 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="flex items-center gap-5 border-b border-artisan-subtle/10 pb-6">
-                  <span className="w-12 h-12 rounded-full bg-gradient-to-br from-artisan-primary to-artisan-primary/80 text-white flex items-center justify-center font-artisan-heading text-lg font-bold shadow-md shadow-artisan-primary/20 ring-4 ring-artisan-primary/10">2</span>
-                  <div>
-                    <h2 className="text-base font-artisan-heading font-bold text-artisan-primary uppercase tracking-wider">Ledger / بہی کھاتہ Schedule</h2>
-                    <p className="text-[10px] text-artisan-subtle font-medium uppercase tracking-wide mt-0.5">Select how you want to manage payments for this order</p>
-                  </div>
+              {/* Section 2: Payment Schedule & Notes */}
+              <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-10 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
+                 <div className="flex flex-col items-center justify-center border-b border-artisan-subtle/10 pb-3 mb-2">
+                  <h2 className="text-xl font-black uppercase tracking-wider animate-text-glow font-artisan-heading text-center">Payment Schedule</h2>
                 </div>
 
-                <div className="space-y-6">
-                  {/* Payment Schedule Selector */}
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-bold text-artisan-primary uppercase tracking-widest ml-1 block">Payment Schedule</label>
-                    <div className={`grid gap-4 ${isSingleItem ? 'grid-cols-1 max-w-xs' : 'grid-cols-1 md:grid-cols-3'}`}>
-                      {[
-                        { id: 'weekly', title: 'Weekly', desc: 'Pay every week', icon: '📅' },
-                        { id: 'monthly', title: 'Monthly', desc: 'Pay every month', icon: '🗓️' },
-                        { id: 'immediate', title: 'COD', desc: 'Pay on delivery', icon: '💵' }
-                      ].filter(item => !isSingleItem || item.id === 'immediate').map((item) => (
-                        <label
-                          key={item.id}
-                          className="relative flex flex-col p-5 rounded-xl border transition-all duration-300 cursor-pointer border-artisan-subtle/15 bg-[#FAF8F5] hover:border-artisan-primary/30 hover:shadow-sm has-[:checked]:border-artisan-primary has-[:checked]:bg-artisan-primary/5 has-[:checked]:shadow-inner"
-                        >
-                          <input
-                            type="radio"
-                            value={item.id}
-                            {...register('paymentSchedule')}
-                            className="absolute top-5 right-5 accent-artisan-primary w-4 h-4 cursor-pointer"
-                          />
-                          <span className="text-lg mb-2">{item.icon}</span>
-                          <span className="text-xs font-extrabold text-artisan-primary uppercase tracking-wider block mb-1">{item.title}</span>
-                          <span className="text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">{item.desc}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Special Instructions */}
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-artisan-primary uppercase tracking-widest ml-1 block">Special Instructions / Order Notes (Optional)</label>
+                <div className="flex flex-row gap-3 items-end">
+                  {/* Special Instructions (First) */}
+                  <div className="space-y-2 flex-1 min-w-0">
+                    <label className="text-[10px] font-bold text-artisan-primary uppercase tracking-widest ml-1 block truncate">Special Instructions (Optional)</label>
                     <textarea
                       {...register('note')}
-                      rows={3}
-                      placeholder="e.g. Please pack safely, or request specific colors/items..."
-                      className="w-full bg-[#FAF8F5] border border-artisan-subtle/20 px-5 py-4 rounded-xl text-artisan-text font-artisan-body text-sm focus:outline-none focus:border-artisan-primary focus:ring-4 focus:ring-artisan-primary/10 transition-all placeholder:text-artisan-subtle/40 resize-none hover:border-artisan-subtle/45"
+                      rows={2}
+                      placeholder="e.g. Pack safely..."
+                      className="w-full bg-[#FAF8F5] border border-artisan-subtle/20 px-3.5 py-3 rounded-xl text-artisan-text font-artisan-body text-xs focus:outline-none focus:border-artisan-primary focus:ring-4 focus:ring-artisan-primary/10 transition-all placeholder:text-artisan-subtle/40 resize-none hover:border-artisan-subtle/45 h-[96px]"
                     />
+                  </div>
+
+                  {/* Payment Schedule Selector (Second) */}
+                  <div className="space-y-2 shrink-0 flex flex-col items-center">
+                    <label className="text-[10px] font-bold text-artisan-primary uppercase tracking-widest block text-center">Method</label>
+                    <label
+                      className="relative flex flex-col items-center justify-center w-[96px] h-[96px] rounded-xl border transition-all duration-300 cursor-pointer border-artisan-primary bg-artisan-primary/5 shadow-sm p-2"
+                    >
+                      <input
+                        type="radio"
+                        value="immediate"
+                        checked
+                        readOnly
+                        {...register('paymentSchedule')}
+                        className="absolute top-2 right-2 accent-artisan-primary w-3.5 h-3.5 cursor-pointer"
+                      />
+                      <span className="text-2xl mb-1 leading-none">💵</span>
+                      <span className="text-[11px] font-black text-artisan-primary uppercase tracking-wider leading-none">COD</span>
+                      <span className="text-[7px] text-artisan-subtle font-extrabold uppercase tracking-wider text-center mt-1 leading-none">Pay on delivery</span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -269,23 +239,27 @@ const Checkout: React.FC = () => {
                 </div>
               )}
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-artisan-primary text-white py-5 rounded-xl text-xs font-bold uppercase tracking-[0.25em] transition-all duration-300 hover:bg-artisan-highlight hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 flex justify-center items-center gap-4 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.99]"
+                className="w-full bg-artisan-primary text-white py-5 rounded-xl text-xs font-bold uppercase tracking-[0.25em] transition-all duration-300 hover:bg-artisan-highlight hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 flex justify-center items-center gap-4 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.99] animate-submit-btn"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                 ) : (
-                  <>Submit Order • Rs. {formatPrice(total)}</>
+                  <span className="flex items-center gap-2">
+                    <span>Submit Order</span>
+                    <span className="bg-[#1E1210] text-[#E6C594] px-3 py-1 rounded-lg text-xs font-black tracking-normal animate-amount-glow inline-block shadow-sm">
+                      Rs. {formatPrice(total)}
+                    </span>
+                  </span>
                 )}
               </button>
             </form>
           </div>
 
           {/* Right Panel: Order Summary */}
-          <div className="w-full lg:w-[40%] bg-white p-8 md:p-10 rounded-2xl border border-artisan-subtle/10 space-y-8 lg:sticky lg:top-32 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="w-full lg:w-[40%] bg-[#FCFAF7] p-8 md:p-10 rounded-2xl border border-artisan-subtle/10 space-y-8 lg:sticky lg:top-32 shadow-sm hover:shadow-md transition-all duration-300">
             <h2 className="font-artisan-heading text-lg font-bold text-artisan-primary uppercase tracking-wider border-b border-artisan-subtle/10 pb-4">
               Order Items
             </h2>
@@ -322,23 +296,23 @@ const Checkout: React.FC = () => {
                 </span>
               </div>
 
-              <div className="pt-6 flex justify-between items-end border-t border-artisan-subtle/10">
-                <span className="font-artisan-heading text-artisan-primary text-xs font-bold uppercase tracking-wider">Estimated Total</span>
+              <div className="p-5 bg-[#1E1210] rounded-xl text-white flex justify-between items-center mt-6 shadow-md shadow-black/10">
+                <span className="font-artisan-heading text-xs font-bold uppercase tracking-wider text-white/70">Estimated Total</span>
                 <div className="text-right">
-                  <span className="text-artisan-highlight font-bold text-2xl block leading-none tracking-tight">Rs. {formatPrice(total)}</span>
-                  <span className="text-artisan-subtle text-[8px] font-bold uppercase tracking-[0.2em] block mt-2 text-right">No Hidden Costs</span>
+                  <span className="text-[#E6C594] font-black text-2xl block leading-none tracking-tight animate-amount-breathing">Rs. {formatPrice(total)}</span>
+                  <span className="text-[8px] font-bold uppercase tracking-[0.2em] block mt-1.5 opacity-60">No Hidden Costs</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-5 bg-[#FAF8F5] rounded-xl border border-artisan-subtle/10 flex flex-col items-center gap-3 text-center">
+            <div className="p-5 bg-white rounded-xl border border-artisan-subtle/10 flex flex-col items-center gap-3 text-center">
               <div className="flex gap-4 text-xl">
                 <span>🛡️</span>
                 <span>🚚</span>
                 <span>🤝</span>
               </div>
               <p className="text-[9px] font-bold text-artisan-subtle uppercase tracking-widest leading-relaxed">
-                FH Wholesale Network Pakistan • Delivery via TCS Courier Service
+                FH Wholesale Pakistan • Delivery via TCS Courier Service
               </p>
             </div>
           </div>

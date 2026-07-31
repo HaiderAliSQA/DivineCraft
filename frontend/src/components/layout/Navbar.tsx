@@ -151,7 +151,7 @@ const Navbar: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {count > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-artisan-highlight text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md animate-bounce-cart">
+                <span key={count} className="absolute -top-0.5 -right-0.5 bg-artisan-highlight text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md animate-badge-pop">
                   {count}
                 </span>
               )}

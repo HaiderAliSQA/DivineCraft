@@ -1,5 +1,5 @@
 // frontend/src/components/ui/ProductCard.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types';
 import { useCart } from '../../hooks/useCart';
@@ -12,11 +12,15 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const { addToCart } = useCart();
+  const [isClicking, setIsClicking] = useState(false);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
+    setIsClicking(true);
+    setTimeout(() => setIsClicking(false), 250);
+
     addToCart({
       productId: product._id,
       name: product.name,
@@ -71,7 +75,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
 
   return (
     <div 
-      className="group relative flex flex-col h-full w-full max-w-[260px] mx-auto bg-artisan-card border border-artisan-subtle/10 rounded-none overflow-hidden transition-all duration-300" 
+      className="group relative flex flex-col h-full w-full max-w-[260px] mx-auto bg-artisan-card border border-artisan-subtle/10 rounded-none overflow-hidden hover-lift-card" 
       style={{ transitionDelay: `${(index || 0) * 0.05}s` }}
     >
       <Link to={`/product/${product.slug}`} className="w-full relative flex flex-col flex-1 h-full">
@@ -121,7 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
           {product.stock > 0 ? (
             <button 
               onClick={handleQuickAdd}
-              className="w-full mt-auto bg-transparent border border-artisan-primary text-artisan-primary font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 hover:bg-artisan-primary hover:text-white transition-all duration-300 rounded-none cursor-pointer"
+              className={`w-full mt-auto bg-transparent border border-artisan-primary text-artisan-primary font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 hover:bg-artisan-primary hover:text-white transition-all duration-300 rounded-none cursor-pointer ${isClicking ? 'animate-cart-click' : ''}`}
               aria-label="Add to Cart"
             >
               Add to Cart

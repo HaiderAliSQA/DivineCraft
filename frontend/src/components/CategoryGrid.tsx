@@ -89,7 +89,7 @@ const CategoryGrid: React.FC = () => {
                   {cat.name}
                 </h3>
                 <span className="font-artisan-body text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-artisan-accent group-hover:text-artisan-highlight transition-colors flex items-center gap-0.5 mt-1">
-                  View <span>&rarr;</span>
+                  View <span className="transition-transform duration-300 group-hover:scale-125 inline-block">&rarr;</span>
                 </span>
               </div>
             </Link>

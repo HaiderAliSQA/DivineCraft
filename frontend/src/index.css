@@ -103,3 +103,137 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* Premium Animations */
+.hover-lift-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+}
+.hover-lift-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.15) !important;
+}
+
+@keyframes shakeBounce {
+  0%, 100% { transform: scale(1); }
+  30% { transform: translateY(-4px) scale(0.96); }
+  70% { transform: translateY(2px) scale(1.02); }
+}
+.animate-cart-click {
+  animation: shakeBounce 0.25s ease-in-out !important;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.6); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.animate-badge-pop {
+  animation: badgePop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+}
+
+/* Checkout Page Animations */
+@keyframes textLightAnimation {
+  0%, 100% { color: #8B5A2B; }
+  50% { color: #2B1408; }
+}
+.animate-text-glow {
+  color: #8B5A2B;
+  animation: textLightAnimation 5s ease-in-out infinite;
+}
+@keyframes priceGlow {
+  0%, 100% {
+    text-shadow: 0 0 2px rgba(230, 197, 148, 0.2);
+    color: #E6C594;
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(230, 197, 148, 0.9), 0 0 20px rgba(230, 197, 148, 0.6);
+    color: #E6C594;
+  }
+}
+.animate-amount-glow {
+  animation: priceGlow 1.5s ease-in-out infinite !important;
+}
+@keyframes amountBreathing {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+}
+.animate-amount-breathing {
+  animation: amountBreathing 2s ease-in-out infinite !important;
+  display: inline-block;
+}
+@keyframes shineSweep {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+@keyframes rippleEffect {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+  }
+}
+@keyframes continuousPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+.animate-submit-btn {
+  position: relative;
+  overflow: hidden;
+  background: #A3704C !important;
+  animation: continuousPulse 3s ease-in-out infinite !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.animate-submit-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+  transform: skewX(-25deg) !important;
+  pointer-events: none;
+  animation: shineSweep 2.5s ease-in-out infinite !important;
+}
+.animate-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.35) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  opacity: 0;
+  pointer-events: none;
+}
+.animate-submit-btn:active::before {
+  animation: rippleEffect 0.4s ease-out !important;
+}
+
+
