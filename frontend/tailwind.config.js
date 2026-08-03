@@ -10,7 +10,7 @@ export default {
           mid:   '#28201B', // Warm dark chocolate container background
           light: '#3C3029', // Warm stone/cocoa border
         },
-        electric: '#A3704C',    // Warm terracotta primary accent
+        electric: '#d1a586',    // Warm light tan/gold primary accent
         'blue-glow': '#D4AF37', // Soft gold accent/glow
         cyan: '#B38E70',        // Warm stone brown
         gold: '#D4AF37',        // Soft gold
@@ -33,10 +33,10 @@ export default {
         'artisan-body': ['Plus Jakarta Sans', 'sans-serif'],
       },
       boxShadow: {
-        'glow-blue': '0 0 20px rgba(163,112,76,0.4)',
+        'glow-blue': '0 0 20px rgba(209,165,134,0.4)',
         'glow-gold': '0 0 20px rgba(212,175,55,0.35)',
         'card':      '0 4px 24px rgba(0,0,0,0.12)',
-        'card-hover':'0 8px 40px rgba(163,112,76,0.2)',
+        'card-hover':'0 8px 40px rgba(209,165,134,0.2)',
       },
       animation: {
         'fade-up':    'fadeUp 0.5s ease forwards',
@@ -49,7 +49,7 @@ export default {
       keyframes: {
         fadeUp:      { '0%': { opacity:'0', transform:'translateY(24px)' }, '100%': { opacity:'1', transform:'translateY(0)' } },
         fadeIn:      { '0%': { opacity:'0' },                               '100%': { opacity:'1' } },
-        pulseGlow:   { '0%,100%': { boxShadow:'0 0 10px rgba(163,112,76,0.3)' }, '50%': { boxShadow:'0 0 28px rgba(163,112,76,0.7)' } },
+        pulseGlow:   { '0%,100%': { boxShadow:'0 0 10px rgba(209,165,134,0.3)' }, '50%': { boxShadow:'0 0 28px rgba(209,165,134,0.7)' } },
         slideIn:     { '0%': { opacity:'0', transform:'translateX(-16px)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
         bounceCart:  { '0%,100%': { transform:'scale(1)' }, '50%': { transform:'scale(1.3)' } },
         float:        { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' } },

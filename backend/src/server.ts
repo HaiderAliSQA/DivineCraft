@@ -108,22 +108,24 @@ const startServer = async (): Promise<void> => {
   try {
     await connectDB();
 
-    // Background migration for legacy orders missing orderType field
+    // Background migration for legacy orders missing orderType field or misclassified as wholesale
     try {
       const Order = (await import('./models/Order')).default;
-      const count = await Order.countDocuments({ orderType: { $exists: false } });
-      if (count > 0) {
-        console.log(`🔄 [Migration] Found ${count} legacy orders without orderType. Migrating...`);
-        const legacyOrders = await Order.find({ orderType: { $exists: false } });
-        for (const order of legacyOrders) {
-          const totalQty = order.items.reduce((sum, item) => sum + item.quantity, 0);
-          order.orderType = totalQty === 1 ? 'customer' : 'wholesale';
-          await order.save({ validateBeforeSave: false });
-        }
-        console.log(`✅ [Migration] Legacy orders migration complete!`);
+      
+      // Update any orders in the Order collection that have orderType: 'wholesale' (or are missing it) to 'customer'
+      const missingCount = await Order.countDocuments({ orderType: { $exists: false } });
+      const misclassifiedCount = await Order.countDocuments({ orderType: 'wholesale' });
+      
+      if (missingCount > 0 || misclassifiedCount > 0) {
+        console.log(`🔄 [Migration] Found ${missingCount} missing and ${misclassifiedCount} misclassified storefront orders. Updating to 'customer'...`);
+        await Order.updateMany(
+          { $or: [{ orderType: { $exists: false } }, { orderType: 'wholesale' }] },
+          { $set: { orderType: 'customer' } }
+        );
+        console.log(`✅ [Migration] Storefront orders migration complete!`);
       }
     } catch (migErr) {
-      console.error('⚠️ [Migration] Failed to migrate legacy orders:', migErr);
+      console.error('⚠️ [Migration] Failed to migrate storefront orders:', migErr);
     }
 
     try {

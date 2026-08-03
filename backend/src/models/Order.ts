@@ -151,13 +151,7 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       enum: ['customer', 'wholesale'],
       required: true,
-      default: function(this: any) {
-        if (this.items && this.items.length > 0) {
-          const totalQty = this.items.reduce((sum: number, item: any) => sum + item.quantity, 0);
-          return totalQty === 1 ? 'customer' : 'wholesale';
-        }
-        return 'customer';
-      }
+      default: 'customer'
     },
   },
   {

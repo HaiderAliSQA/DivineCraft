@@ -1,5 +1,6 @@
 // backend/src/routes/adminPayments.ts
 import { Router, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import Order from '../models/Order';
 import Payment, { PaymentMethod } from '../models/Payment';
 import authMiddleware from '../middleware/authMiddleware';
@@ -30,11 +31,19 @@ router.post('/', authMiddleware, async (req: Request, res: Response): Promise<vo
       return;
     }
 
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      res.status(400).json({ success: false, message: 'Invalid order ID format' });
+      return;
+    }
+
     const order = await Order.findById(orderId);
     if (!order) {
       res.status(404).json({ success: false, message: 'Order not found' });
       return;
     }
+
+    // Map 'cod' from frontend to 'cash' to match MongoDB schema enum
+    const normalizedMethod = (method as string) === 'cod' ? 'cash' : method;
 
     // Assert payment does not exceed the remaining due
     if (amount > order.totalDue) {
@@ -53,7 +62,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response): Promise<vo
       shopName: order.shopName,
       phone: order.phone,
       amount,
-      method,
+      method: normalizedMethod,
       transactionId: transactionId?.trim() || undefined,
       paymentDate: paymentDate ? new Date(paymentDate) : new Date(),
       installmentNote: installmentNote?.trim() || undefined,

@@ -10,7 +10,7 @@ import AddOrderPaymentModal from './components/AddOrderPaymentModal';
 const AdminOrders: React.FC = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState('');
@@ -168,18 +168,19 @@ const AdminOrders: React.FC = () => {
               <p className="text-gray-400 text-sm">Create storefront checkouts to populate this portal.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto min-h-[400px]">
+            <div className="overflow-x-auto">
               <table className="w-full text-left whitespace-nowrap text-[13px]">
                 <thead className="border-b border-navy-light bg-navy-dark/50">
                   <tr>
                     {[
                       'Order ID',
-                      'Customer Info',
+                      'Customer Name',
+                      'Address',
                       'Phone',
                       'City',
                       'Product',
                       'Qty',
-                      'Total (PKR 200 TCS)',
+                      'Total',
                       'Payment Status',
                       'Order Status',
                       'Date',
@@ -205,16 +206,30 @@ const AdminOrders: React.FC = () => {
                         <td className="px-4 py-4.5 font-mono font-bold text-electric">
                           {order.orderId || order.orderNumber || '—'}
                         </td>
-                        <td className="px-4 py-4.5">
-                          <p className="text-white font-bold uppercase tracking-wide">{customerName}</p>
-                          <p className="text-gray-400 text-[10px]">{customerAddress}</p>
+                        <td className="px-4 py-4.5 max-w-[150px] whitespace-normal">
+                          <p className="text-white font-bold uppercase tracking-wide break-words">{customerName}</p>
                         </td>
-                        <td className="px-4 py-4.5 text-gray-400 font-mono text-[12px]">{phone}</td>
-                        <td className="px-4 py-4.5 text-gray-300 font-medium">{city}</td>
-                        <td className="px-4 py-4.5 text-gray-300 font-medium truncate max-w-[200px]" title={product}>
+                        <td className="px-4 py-4.5 max-w-[200px]">
+                          <div className="relative group cursor-help">
+                            <p className="text-gray-400 text-[11px] font-bold truncate">{customerAddress}</p>
+                            <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-[999] bg-navy-dark border border-navy-light text-white text-[11px] p-3 rounded-lg shadow-2xl w-64 whitespace-normal break-words">
+                              {customerAddress}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4.5 text-gray-400 font-mono font-bold text-[12px]">{phone}</td>
+                        <td className="px-4 py-4.5 max-w-[150px]">
+                          <div className="relative group cursor-help">
+                            <p className="text-gray-300 font-bold truncate">{city}</p>
+                            <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-[999] bg-navy-dark border border-navy-light text-white text-[11px] p-3 rounded-lg shadow-2xl w-48 whitespace-normal break-words">
+                              {city}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4.5 text-gray-300 font-bold truncate max-w-[200px]" title={product}>
                           {product}
                         </td>
-                        <td className="px-4 py-4.5 text-gray-300 font-medium">{qty}</td>
+                        <td className="px-4 py-4.5 text-gray-300 font-bold">{qty}</td>
                         <td className="px-4 py-4.5 text-white font-bold">{formatPrice(order.totalAmount)}</td>
                         <td className="px-4 py-4.5">
                           <span className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${getPaymentStatusBadge(order.paymentStatus)}`}>
@@ -229,16 +244,16 @@ const AdminOrders: React.FC = () => {
                               onChange={(e) => handleStatusChange(order._id, e.target.value)}
                               className={`w-full text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${getOrderStatusBadge(order.orderStatus)}`}
                             >
-                              <option value="pending" className="bg-navy-mid">Pending</option>
-                              <option value="confirmed" className="bg-navy-mid">Confirmed</option>
-                              <option value="processing" className="bg-navy-mid">Processing</option>
-                              <option value="shipped" className="bg-navy-mid">Shipped</option>
-                              <option value="delivered" className="bg-navy-mid">Delivered</option>
-                              <option value="cancelled" className="bg-navy-mid">Cancelled</option>
+                              <option value="pending" className="bg-navy-mid text-white font-bold uppercase">Pending</option>
+                              <option value="confirmed" className="bg-navy-mid text-white font-bold uppercase">Confirmed</option>
+                              <option value="processing" className="bg-navy-mid text-white font-bold uppercase">Processing</option>
+                              <option value="shipped" className="bg-navy-mid text-white font-bold uppercase">Shipped</option>
+                              <option value="delivered" className="bg-navy-mid text-white font-bold uppercase">Delivered</option>
+                              <option value="cancelled" className="bg-navy-mid text-white font-bold uppercase">Cancelled</option>
                             </select>
                           </div>
                         </td>
-                        <td className="px-4 py-4.5 text-gray-400 font-medium">
+                        <td className="px-4 py-4.5 text-gray-400 font-bold">
                           {new Date(order.createdAt).toLocaleDateString('en-PK', {
                             day: 'numeric',
                             month: 'short',
@@ -271,29 +286,80 @@ const AdminOrders: React.FC = () => {
           )}
 
           {/* 4. PAGINATION FOOTER */}
-          {totalPages > 1 && (
-            <div className="p-4 border-t border-navy-light flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
-                Page {page} of {totalPages}
-              </span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
-                >
-                  →
-                </button>
-              </div>
+          <div className="p-4 border-t border-navy-light flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Rows Per Page Select */}
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">Rows per page:</span>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="bg-navy-dark border border-navy-light text-white text-[12px] font-bold py-1.5 px-3 rounded-lg outline-none cursor-pointer focus:border-electric transition-all"
+              >
+                {[5, 10, 20, 30, 50, 100].map((opt) => (
+                  <option key={opt} value={opt} className="bg-navy-mid text-white font-bold">{opt}</option>
+                ))}
+              </select>
             </div>
-          )}
+
+            {/* Navigation Status */}
+            <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
+              Page {page} of {totalPages}
+            </span>
+
+            {/* Navigation Action Buttons */}
+            <div className="flex gap-2">
+              {/* Go to First Page */}
+              <button
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+                className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+                title="First Page"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M17 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Go to Previous Page */}
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+                title="Previous Page"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Go to Next Page */}
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+                title="Next Page"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Go to Last Page */}
+              <button
+                onClick={() => setPage(totalPages)}
+                disabled={page === totalPages}
+                className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+                title="Last Page"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M6 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

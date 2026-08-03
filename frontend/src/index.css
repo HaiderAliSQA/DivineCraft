@@ -18,16 +18,16 @@
   
   /* Modern Tech Scrollbar */
   ::-webkit-scrollbar { 
-    width: 6px; 
-    height: 4px; 
+    width: 10px; 
+    height: 8px; 
   }
   ::-webkit-scrollbar-track { 
     background: theme('colors.navy.dark'); 
   }
   ::-webkit-scrollbar-thumb { 
-    background: theme('colors.navy.light');
+    background: #6B7280; /* Lighter slate gray */
     border-radius: 10px; 
-    border: 1px solid theme('colors.navy.mid');
+    border: 2px solid theme('colors.navy.mid');
   }
   ::-webkit-scrollbar-thumb:hover {
     background: theme('colors.electric');
@@ -198,7 +198,7 @@
 .animate-submit-btn {
   position: relative;
   overflow: hidden;
-  background: #A3704C !important;
+  background: #d1a586 !important;
   animation: continuousPulse 3s ease-in-out infinite !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }

@@ -106,10 +106,10 @@ const AdminProducts: React.FC = () => {
       </div>
 
       <div className="px-6 pb-12">
-        <div className="bg-navy-mid border border-navy-light shadow-sm flex flex-col min-h-[500px]">
+        <div className="bg-navy-mid border border-navy-light shadow-sm flex flex-col">
 
         {/* Table */}
-        <div className="overflow-x-auto min-h-[400px]">
+        <div className="overflow-x-auto">
           {isLoading ? (
             <div className="p-20 text-center text-white-3 font-dm skeleton-shimmer text-[15px]">Syncing inventory...</div>
           ) : products.length === 0 ? (
@@ -233,40 +233,77 @@ const AdminProducts: React.FC = () => {
         </div>
 
         {/* 2. ADVANCED PAGINATION FOOTER */}
-        <div className="p-4 border-t border-navy-light flex flex-col md:flex-row justify-between items-center gap-6 bg-navy-mid">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <span className="text-[11px] text-white-3 font-black uppercase tracking-[0.2em]">
-              Showing Page {Math.max(0, page - 1)} of {Math.max(0, totalPages - 1)}
-            </span>
-            
-            <div className="flex items-center gap-3 border-l border-navy-light pl-6">
-              <span className="text-[10px] font-black uppercase tracking-widest text-white-3">Rows:</span>
-              <select
-                value={limit}
-                onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
-                className="bg-navy-mid border border-navy-light text-[11px] font-black px-3 py-1 outline-none focus:border-fm-gold transition-colors cursor-pointer"
-              >
-                {[10, 20, 30, 50, 100].map(val => (
-                  <option key={val} value={val}>{val}</option>
-                ))}
-              </select>
-            </div>
+        <div className="p-4 border-t border-navy-light flex flex-col sm:flex-row items-center justify-between gap-4 bg-navy-mid">
+          {/* Rows Per Page Select */}
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">Rows per page:</span>
+            <select
+              value={limit}
+              onChange={(e) => {
+                setLimit(Number(e.target.value));
+                setPage(1);
+              }}
+              className="bg-navy-dark border border-navy-light text-white text-[12px] font-bold py-1.5 px-3 rounded-lg outline-none cursor-pointer focus:border-electric transition-all"
+            >
+              {[5, 10, 20, 30, 50, 100].map((opt) => (
+                <option key={opt} value={opt} className="bg-navy-mid text-white font-bold">{opt}</option>
+              ))}
+            </select>
           </div>
 
+          {/* Navigation Status */}
+          <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
+            Page {page} of {totalPages}
+          </span>
+
+          {/* Navigation Action Buttons */}
           <div className="flex gap-2">
+            {/* Go to First Page */}
             <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
+              onClick={() => setPage(1)}
               disabled={page === 1}
-              className="w-12 h-12 flex items-center justify-center border border-navy-light bg-navy-mid text-white hover:bg-navy-light hover:text-white disabled:opacity-20 transition-all font-bold"
+              className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+              title="First Page"
             >
-              &larr;
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M17 19l-7-7 7-7" />
+              </svg>
             </button>
+
+            {/* Go to Previous Page */}
             <button
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="w-12 h-12 flex items-center justify-center border border-navy-light bg-navy-mid text-white hover:bg-navy-light hover:text-white disabled:opacity-20 transition-all font-bold"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+              title="Previous Page"
             >
-              &rarr;
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Go to Next Page */}
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+              title="Next Page"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Go to Last Page */}
+            <button
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+              className="w-10 h-10 flex items-center justify-center border border-navy-light text-white hover:bg-navy-light disabled:opacity-20 rounded-lg transition-all cursor-pointer"
+              title="Last Page"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M6 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>

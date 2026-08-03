@@ -437,6 +437,8 @@ router.patch('/:id/discontinue', authMiddleware, async (req: Request, res: Respo
     product.isDiscontinued = !product.isDiscontinued;
     if (product.isDiscontinued) {
       product.isVisible = false;
+    } else {
+      product.isVisible = true;
     }
     await product.save();
 

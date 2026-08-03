@@ -130,7 +130,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const subtotal = resolvedItems.reduce((sum, item) => sum + item.subtotal, 0);
     const totalQuantity = resolvedItems.reduce((sum, item) => sum + item.quantity, 0);
-    const orderType = totalQuantity === 1 ? 'customer' : 'wholesale';
+    const orderType = 'customer';
     const deliveryFee = totalQuantity === 1 ? 200 : 0;
     const totalAmount = subtotal + deliveryFee;
 
