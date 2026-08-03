@@ -95,16 +95,7 @@ app.use('/api/admin/orders', adminOrderRoutes);
 app.use('/api/admin/payments', adminPaymentRoutes);
 app.use('/api/admin/dashboard', adminDashboardRoutes);
 
-// ─── Serve Frontend Static Assets ──────────────────────────────────────────────
-app.use(express.static(path.resolve(__dirname, '../../frontend/dist')));
 
-// ─── Fallback for SPA Routing (Serve React SPA for all non-API GET routes) ──────
-app.get('*', (req: Request, res: Response, next): void => {
-  if (req.path.startsWith('/api')) {
-    return next();
-  }
-  res.sendFile(path.resolve(__dirname, '../../frontend/dist/index.html'));
-});
 
 // ─── Error Handling ───────────────────────────────────────────────────────────
 
