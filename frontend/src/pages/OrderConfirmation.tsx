@@ -190,6 +190,44 @@ const OrderConfirmation: React.FC = () => {
             border-color: #e2e8f0 !important;
           }
         }
+
+        @keyframes pulseBreathing {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 4px 12px rgba(61, 31, 13, 0.12);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(193, 68, 14, 0.28);
+          }
+        }
+        @keyframes shineSweepCustom {
+          0% { left: -150%; }
+          50% { left: 150%; }
+          100% { left: 150%; }
+        }
+        .btn-mobile-continue {
+          animation: pulseBreathing 2.5s ease-in-out infinite;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        .btn-mobile-continue::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -150%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.35) 50%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          transform: skewX(-25deg);
+          animation: shineSweepCustom 3.5s ease-in-out infinite;
+        }
       `}</style>
 
       <div className="max-w-4xl mx-auto space-y-6 animate-fade-up">
@@ -209,61 +247,73 @@ const OrderConfirmation: React.FC = () => {
         </div>
 
         {/* Shukriya Hero Header */}
-        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 xs:p-6 sm:p-8 md:p-12 text-center relative overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
           
           {/* Glowing Animated Success Checkmark */}
-          <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 check-circle no-print shadow-inner">
-            <svg className="w-10 h-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 check-circle no-print shadow-inner">
+            <svg className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path className="check-path" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
           {/* Personalized Shukriya Greetings */}
-          <h1 className="font-artisan-heading animated-gradient-text text-4xl md:text-6xl font-extrabold uppercase tracking-wider mb-3 leading-tight">
+          <h1 className="font-artisan-heading animated-gradient-text text-xl xs:text-2xl sm:text-4xl md:text-6xl font-extrabold uppercase tracking-wider mb-3 leading-tight break-words">
             SHUKRIYA {firstName} BHAI!
           </h1>
-          <p className="text-artisan-highlight text-sm font-extrabold uppercase tracking-[0.35em] mb-6 bg-artisan-highlight/10 border-2 border-artisan-highlight/30 py-2.5 px-6 rounded-full inline-block shadow-sm no-print">
+          <p className="text-artisan-highlight text-[10px] xs:text-xs sm:text-sm font-extrabold uppercase tracking-[0.12em] sm:tracking-[0.2em] md:tracking-[0.35em] mb-4 sm:mb-6 bg-artisan-highlight/10 border-2 border-artisan-highlight/30 py-1.5 sm:py-2 md:py-2.5 px-4 sm:px-6 rounded-full inline-block shadow-sm no-print max-w-full break-words">
             Order Placed Successfully
           </p>
-          <p className="text-slate-800 text-sm md:text-base font-bold tracking-wide max-w-xl mx-auto leading-relaxed border-t border-artisan-subtle/15 pt-6 no-print">
+          <p className="text-slate-800 text-xs sm:text-sm md:text-base font-bold tracking-wide max-w-xl mx-auto leading-relaxed border-t border-artisan-subtle/15 pt-4 sm:pt-6 no-print">
             Aapka order receive ho gaya — hum jald dispatch karein ge. Niche di gayi details check kar lein.
           </p>
           
           {/* Confirmation Meta Details */}
-          <div className="grid grid-cols-2 gap-6 max-w-md mx-auto mt-8 p-6 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl">
-            <div className="border-r border-artisan-subtle/10 pr-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-md mx-auto mt-6 sm:mt-8 p-4 sm:p-6 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl">
+            <div className="border-b sm:border-b-0 sm:border-r border-artisan-subtle/10 pb-4 sm:pb-0 sm:pr-4 text-center sm:text-left">
               <p className="text-[10px] text-artisan-subtle font-extrabold uppercase tracking-widest mb-1.5">Confirmation Number</p>
-              <p className="text-artisan-primary font-bold text-base tracking-tight">{order.orderId}</p>
+              <p className="text-artisan-primary font-bold text-sm sm:text-base tracking-tight break-all">{order.orderId}</p>
             </div>
-            <div className="pl-2">
+            <div className="pt-2 sm:pt-0 sm:pl-4 text-center sm:text-left">
               <p className="text-[10px] text-artisan-subtle font-extrabold uppercase tracking-widest mb-1.5">Order Date</p>
-              <p className="text-artisan-primary font-bold text-base tracking-tight">{formattedDate}</p>
+              <p className="text-artisan-primary font-bold text-sm sm:text-base tracking-tight break-words">{formattedDate}</p>
             </div>
           </div>
         </div>
 
+        {/* Continue Shopping Button - Exclusively for Mobile View */}
+        <div className="block sm:hidden my-6 px-1 no-print text-center">
+          <Link 
+            to="/" 
+            className="btn-mobile-continue inline-block w-4/5 max-w-[260px] bg-gradient-to-r from-artisan-primary via-artisan-highlight to-artisan-primary text-white font-extrabold uppercase tracking-[0.2em] text-[13px] py-5 rounded-xl text-center shadow-md cursor-pointer border border-artisan-primary/10"
+          >
+            Continue Shopping
+          </Link>
+        </div>
+
         {/* Purchase Summary Table */}
-        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-8 md:p-10 space-y-6 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 sm:p-6 md:p-10 space-y-6 shadow-sm hover:shadow-md transition-all duration-300">
           <h3 className="font-artisan-heading text-xs font-bold text-artisan-subtle uppercase tracking-widest border-b border-artisan-subtle/10 pb-4">
             Review Items
           </h3>
           <div className="divide-y divide-artisan-subtle/10">
             {order.items.map((item: any, idx: number) => (
-              <div key={idx} className="flex gap-4 items-center py-5 first:pt-0 last:pb-0 group">
-                <div className="w-16 h-16 bg-[#FAF8F5] rounded-xl border border-artisan-subtle/10 p-2 shrink-0 flex items-center justify-center group-hover:border-artisan-primary transition-colors duration-300">
+              <div key={idx} className="flex gap-3 sm:gap-4 items-center py-4 sm:py-5 first:pt-0 last:pb-0 group">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#FAF8F5] rounded-xl border border-artisan-subtle/10 p-1.5 sm:p-2 shrink-0 flex items-center justify-center group-hover:border-artisan-primary transition-colors duration-300">
                   <img src={item.image || '/placeholder-product.png'} alt={item.name} className="w-full h-full object-contain" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-artisan-primary uppercase truncate group-hover:text-artisan-highlight transition-colors duration-300">{item.name}</h4>
-                  <div className="flex gap-4 mt-1.5 text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">
-                    <span>QTY: {item.quantity}</span>
-                    {item.size && <span>Size: {item.size}</span>}
-                    {item.color && <span>Color: {item.color}</span>}
+                <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-artisan-primary uppercase truncate group-hover:text-artisan-highlight transition-colors duration-300">{item.name}</h4>
+                    <div className="flex flex-wrap gap-2 sm:gap-4 mt-1 text-[9px] text-artisan-subtle font-bold uppercase tracking-wider">
+                      <span>QTY: {item.quantity}</span>
+                      {item.size && <span>Size: {item.size}</span>}
+                      {item.color && <span>Color: {item.color}</span>}
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs font-bold text-artisan-primary">Rs. {formatPrice(item.price * item.quantity)}</p>
-                  <p className="text-[9px] text-artisan-subtle font-medium uppercase mt-1">Rs. {formatPrice(item.price)} each</p>
+                  <div className="text-left sm:text-right shrink-0">
+                    <p className="text-xs font-bold text-artisan-primary">Rs. {formatPrice(item.price * item.quantity)}</p>
+                    <p className="text-[9px] text-artisan-subtle font-medium uppercase mt-0.5 sm:mt-1">Rs. {formatPrice(item.price)} each</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -280,7 +330,7 @@ const OrderConfirmation: React.FC = () => {
             </div>
             <div className="flex justify-between items-center text-xs font-bold text-artisan-primary uppercase tracking-wider mt-4 pt-4 border-t border-artisan-subtle/10">
               <span>Grand Total</span>
-              <span className="text-artisan-highlight font-bold text-2xl">Rs. {formatPrice(order.totalAmount)}</span>
+              <span className="text-artisan-highlight font-bold text-xl sm:text-2xl">Rs. {formatPrice(order.totalAmount)}</span>
             </div>
           </div>
         </div>
@@ -289,7 +339,7 @@ const OrderConfirmation: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Logistics block */}
-          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 sm:p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex items-center gap-3">
               <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">🚚</span>
               <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">TCS Express Delivery</h3>
@@ -303,7 +353,7 @@ const OrderConfirmation: React.FC = () => {
           </div>
 
           {/* Shipping Address Block */}
-          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 sm:p-6 md:p-8 space-y-4 shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex items-center gap-3">
               <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">📍</span>
               <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Delivery Address</h3>
@@ -311,25 +361,25 @@ const OrderConfirmation: React.FC = () => {
             <div className="space-y-3 text-[10px] font-bold uppercase tracking-wider">
               <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">Name</span>
-                <span className="text-artisan-primary">{order.ownerName}</span>
+                <span className="text-artisan-primary text-right pl-2 break-words">{order.ownerName}</span>
               </div>
               <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">Phone</span>
-                <span className="text-artisan-primary">{order.phone}</span>
+                <span className="text-artisan-primary text-right pl-2 break-words">{order.phone}</span>
               </div>
               <div className="flex justify-between border-b border-artisan-subtle/10 pb-2">
                 <span className="text-artisan-subtle">City</span>
-                <span className="text-artisan-primary">{order.city}</span>
+                <span className="text-artisan-primary text-right pl-2 break-words">{order.city}</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="text-artisan-subtle shrink-0">Address</span>
-                <span className="text-artisan-primary text-right max-w-[200px] break-words">{order.shopName}</span>
+                <span className="text-artisan-primary text-right pl-2 break-words flex-1">{order.shopName}</span>
               </div>
             </div>
           </div>
 
           {/* Payment Status Block */}
-          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 sm:p-6 md:p-8 space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">💵</span>
@@ -340,7 +390,7 @@ const OrderConfirmation: React.FC = () => {
                 <p className="text-[9px] text-artisan-subtle font-extrabold uppercase tracking-widest">STATUS: PENDING</p>
               </div>
             </div>
-            <div className="p-4 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl mt-3 shadow-inner">
+            <div className="p-3 sm:p-4 bg-[#FAF8F5] border border-artisan-subtle/10 rounded-xl mt-3 shadow-inner">
               <p className="text-[10px] text-artisan-highlight font-extrabold uppercase tracking-wider text-center leading-relaxed italic">
                 "PKR {order.totalAmount.toLocaleString()} cash tayar rakhein delivery ke waqt."
               </p>
@@ -348,7 +398,7 @@ const OrderConfirmation: React.FC = () => {
           </div>
 
           {/* Concierge Support Block */}
-          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-white border border-artisan-subtle/10 rounded-2xl p-4 sm:p-6 md:p-8 space-y-4 no-print shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex items-center gap-3">
               <span className="w-10 h-10 rounded-xl bg-[#FAF8F5] flex items-center justify-center text-lg border border-artisan-subtle/10 shadow-sm">☎️</span>
               <h3 className="font-artisan-heading text-xs font-bold text-artisan-primary uppercase tracking-widest">Concierge Assistance</h3>
@@ -357,18 +407,18 @@ const OrderConfirmation: React.FC = () => {
               <p className="text-[9px] text-artisan-subtle font-extrabold uppercase tracking-wider leading-relaxed">
                 ORDER ASSISTANCE IS AVAILABLE 24/7.
               </p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <a 
                   href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '923007709173'}?text=Assalam-o-Alaikum, order ID *${order.orderId}* details check kar lein.`} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="bg-[#25D366]/10 hover:bg-[#25D366] hover:text-white text-[#25D366] py-3.5 rounded-xl font-bold uppercase tracking-widest text-[9px] text-center border border-[#25D366]/20 transition-all duration-300 cursor-pointer hover:shadow-md"
+                  className="bg-[#25D366]/10 hover:bg-[#25D366] hover:text-white text-[#25D366] py-3 sm:py-3.5 rounded-xl font-bold uppercase tracking-wider text-[9px] text-center border border-[#25D366]/20 transition-all duration-300 cursor-pointer hover:shadow-md"
                 >
                   WhatsApp
                 </a>
                 <a 
                   href="tel:+923007709173" 
-                  className="bg-artisan-primary/10 hover:bg-artisan-primary hover:text-white text-artisan-primary py-3.5 rounded-xl font-bold uppercase tracking-widest text-[9px] text-center border border-artisan-primary/20 transition-all duration-300 cursor-pointer hover:shadow-md"
+                  className="bg-artisan-primary/10 hover:bg-artisan-primary hover:text-white text-artisan-primary py-3 sm:py-3.5 rounded-xl font-bold uppercase tracking-wider text-[9px] text-center border border-artisan-primary/20 transition-all duration-300 cursor-pointer hover:shadow-md"
                 >
                   Direct Call
                 </a>
@@ -382,7 +432,7 @@ const OrderConfirmation: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 pt-6 no-print">
           <Link 
             to="/" 
-            className="btn-continue-animated flex-1 bg-white text-artisan-primary font-bold uppercase tracking-[0.2em] text-xs py-5 rounded-xl text-center border border-artisan-primary/20 hover:border-artisan-primary transition-all shadow-sm cursor-pointer"
+            className="btn-continue-animated hidden sm:flex sm:flex-1 items-center justify-center bg-white text-artisan-primary font-bold uppercase tracking-[0.2em] text-xs py-5 rounded-xl text-center border border-artisan-primary/20 hover:border-artisan-primary transition-all shadow-sm cursor-pointer"
           >
             Continue Shopping
           </Link>
