@@ -1,42 +1,32 @@
 // frontend/src/components/ui/ProductCard.tsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types';
 import { useCart } from '../../hooks/useCart';
 import { formatPrice, discountPercent } from '../../utils/formatPrice';
 
 interface ProductCardProps {
   product: Product;
-  index?: number; // for stagger animation delay
+  index?: number;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const { addToCart } = useCart();
-  const [isClicking, setIsClicking] = useState(false);
-
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    setIsClicking(true);
-    setTimeout(() => setIsClicking(false), 250);
-
-    addToCart({
-      productId: product._id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      image: product.images[0] || '',
-      slug: product.slug,
-      color: product.colors?.[0] || 'Original',
-    });
-  };
+  const navigate = useNavigate();
+  const [addedFlash, setAddedFlash] = useState(false);
 
   const discount = discountPercent(product.price, product.compareAtPrice || 0);
 
-  // Derived Category Label helper
   const getCategoryLabel = () => {
     const labels: Record<string, string> = {
+      'baby-collection': 'Baby Collection',
+      'home-decor': 'Home Décor',
+      'kitchen-dining': 'Kitchen & Dining',
+      'art-gifts': 'Art & Gifts',
+      'furniture': 'Furniture',
+      'lighting': 'Lighting',
+      'storage-boxes': 'Storage & Boxes',
+      'religious-islamic-decor': 'Islamic Décor',
       'wax-candles': 'Wax Candle',
       'resin-art': 'Resin Art',
       'wooden-ware': 'Wooden Ware',
@@ -49,98 +39,122 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
     return labels[product.category] || 'Artisan Craft';
   };
 
-  // Determine Badge Type: SALE, NEW, HOT
   const renderBadge = () => {
     if (discount > 0) {
       return (
-        <span className="bg-artisan-highlight text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
-          SALE -{discount}%
+        <span className="bg-green-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-sm uppercase tracking-wide shadow-sm">
+          Sale!
         </span>
       );
     }
-    // Alternate badges for editorial diversity
-    if ((index || 0) % 2 === 0) {
+    if ((index || 0) % 3 === 0) {
       return (
-        <span className="bg-artisan-accent text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
-          NEW
+        <span className="bg-green-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-sm uppercase tracking-wide shadow-sm">
+          New!
         </span>
       );
     }
     return (
-      <span className="bg-artisan-primary text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
-        HOT
+      <span className="bg-green-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-sm uppercase tracking-wide shadow-sm">
+        Hot!
       </span>
     );
   };
 
-  return (
-    <div 
-      className="group relative flex flex-col h-full w-full max-w-[260px] mx-auto bg-artisan-card border border-artisan-subtle/10 rounded-none overflow-hidden hover-lift-card" 
-      style={{ transitionDelay: `${(index || 0) * 0.05}s` }}
-    >
-      <Link to={`/product/${product.slug}`} className="w-full relative flex flex-col flex-1 h-full">
-        {/* SQUARE IMAGE AREA */}
-        <div className="relative w-full aspect-square overflow-hidden bg-artisan-bg">
-          <img 
-            src={product.images[0] || '/placeholder.png'} 
-            alt={product.name} 
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-          />
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product.stock <= 0) return;
 
-          {/* BADGES (Top-left corner, colored pill) */}
-          <div className="absolute top-4 left-4 z-10">
-            {renderBadge()}
+    setAddedFlash(true);
+    setTimeout(() => setAddedFlash(false), 700);
+
+    addToCart({
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images[0] || '',
+      slug: product.slug,
+      color: product.colors?.[0] || 'Original',
+    });
+  };
+
+  return (
+    <div
+      className="group relative flex flex-col bg-white border border-gray-100 overflow-hidden cursor-pointer h-full"
+      style={{ transitionDelay: `${(index || 0) * 0.04}s` }}
+    >
+      {/* ── IMAGE AREA (100% Visible, No Opacity Overlays) ── */}
+      <div 
+        className="relative w-full aspect-[3/4] overflow-hidden bg-gray-50"
+        onClick={() => navigate(`/product/${product.slug}`)}
+      >
+        <img
+          src={product.images[0] || '/placeholder.png'}
+          alt={product.name}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+
+        {/* Badge – top left */}
+        <div className="absolute top-2 left-2 z-10">
+          {renderBadge()}
+        </div>
+      </div>
+
+      {/* ── BOTTOM CONTAINER (DETAILS REPLACED BY BUTTON ON HOVER) ── */}
+      <div className="relative overflow-hidden bg-white p-3 flex flex-col justify-between min-h-[85px] sm:min-h-[92px]">
+        
+        {/* Product Details (Fades out and slides slightly on hover) */}
+        <div 
+          className="transition-all duration-300 transform group-hover:-translate-y-2 group-hover:opacity-0 flex flex-col justify-between h-full"
+          onClick={() => navigate(`/product/${product.slug}`)}
+        >
+          <div>
+            <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-artisan-highlight block truncate">
+              {getCategoryLabel()}
+            </span>
+            <h3 className="font-artisan-heading text-xs sm:text-sm font-semibold text-artisan-primary mt-0.5 line-clamp-1 leading-snug">
+              {product.name}
+            </h3>
+          </div>
+          
+          <div className="flex flex-wrap items-baseline gap-1.5 mt-1.5">
+            {product.compareAtPrice && product.compareAtPrice > product.price && (
+              <span className="text-gray-400 line-through text-[10px] sm:text-xs font-medium">
+                Rs.{formatPrice(product.compareAtPrice)}
+              </span>
+            )}
+            <span className="text-xs sm:text-sm font-bold text-artisan-primary">
+              Rs.{formatPrice(product.price)}
+            </span>
           </div>
         </div>
 
-        {/* INFO AREA */}
-        <div className="p-4 md:p-5 flex flex-col flex-1">
-          {/* Category Label */}
-          <span className="font-artisan-body text-[9px] font-bold uppercase tracking-widest text-artisan-highlight">
-            {getCategoryLabel()}
-          </span>
-
-          {/* Product Name (Cormorant, medium) */}
-          <h3 className="font-artisan-heading text-base md:text-lg font-medium text-artisan-primary mt-1.5 line-clamp-2 leading-snug">
-            {product.name}
-          </h3>
-          
-          {/* Price (with strikethrough if on sale) */}
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="font-artisan-body text-sm font-bold text-artisan-primary">
-              Rs. {formatPrice(product.price)}
-            </span>
-            {product.compareAtPrice && product.compareAtPrice > product.price && (
-              <span className="font-artisan-body text-gray-400 line-through text-xs font-medium">
-                Rs. {formatPrice(product.compareAtPrice)}
-              </span>
-            )}
-          </div>
-          
-          {/* Flex spacer to push buttons to the bottom */}
-          <div className="flex-1 min-h-[16px]" />
-
-          {/* Outlined Add to Cart Button */}
+        {/* Add To Cart Button (Slides up and overlays on hover) */}
+        <div className="absolute inset-0 flex items-center justify-center p-3 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-white">
           {product.stock > 0 ? (
-            <button 
+            <button
               onClick={handleQuickAdd}
-              className={`w-full mt-auto bg-transparent border border-artisan-primary text-artisan-primary font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 hover:bg-artisan-primary hover:text-white transition-all duration-300 rounded-none cursor-pointer ${isClicking ? 'animate-cart-click' : ''}`}
-              aria-label="Add to Cart"
+              className={`w-full py-2.5 font-bold text-[10px] sm:text-xs uppercase tracking-widest transition-all duration-200 border border-artisan-primary ${
+                addedFlash
+                  ? 'bg-green-500 text-white border-green-500'
+                  : 'bg-artisan-primary text-white hover:bg-transparent hover:text-artisan-primary'
+              }`}
             >
-              Add to Cart
+              {addedFlash ? '✓ Added!' : 'Add to cart'}
             </button>
           ) : (
-            <button 
+            <button
               disabled
-              className="w-full mt-auto bg-transparent border border-artisan-subtle/30 text-artisan-subtle/60 font-artisan-body text-[10px] font-bold uppercase tracking-[0.25em] py-3 md:py-3.5 rounded-none cursor-not-allowed"
-              title="Out of Stock"
+              className="w-full py-2.5 bg-gray-200 text-gray-500 font-bold text-[10px] sm:text-xs uppercase tracking-widest cursor-not-allowed"
             >
-              SOLD OUT
+              Sold Out
             </button>
           )}
         </div>
-      </Link>
+      </div>
     </div>
   );
 };

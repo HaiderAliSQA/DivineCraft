@@ -12,10 +12,10 @@ const PromoBar: React.FC = () => {
         
         {/* Center Side: Live Contacts */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 my-2 md:my-0 text-[10px] sm:text-[11px]">
-          <a href="tel:+923171117333" className="flex items-center gap-1 hover:text-artisan-accent transition-all">
-            <span className="text-xs">📞</span> Call Us <span className="font-mono text-gray-300 ml-1">+92-317-111-7333</span>
+          <a href="tel:+923007709173" className="flex items-center gap-1 hover:text-artisan-accent transition-all">
+            <span className="text-xs">📞</span> Call Us <span className="font-mono text-gray-300 ml-1">+92-300-770-9173</span>
           </a>
-          <a href="https://wa.me/923171117333" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#25D366] transition-all">
+          <a href="https://wa.me/923007709173" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#25D366] transition-all">
             <span className="text-xs">💬</span> WhatsApp
           </a>
         </div>

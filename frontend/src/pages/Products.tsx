@@ -41,9 +41,9 @@ const RELATED_CATEGORIES = {
 };
 
 const SORTS = [
-  { label: 'Newest Arrivals', value: '-createdAt' },
-  { label: 'Price: Low to High', value: 'price' },
-  { label: 'Price: High to Low', value: '-price' },
+  { label: 'Newest Arrivals', value: 'newest' },
+  { label: 'Price: Low to High', value: 'price_asc' },
+  { label: 'Price: High to Low', value: 'price_desc' },
 ];
 
 const Products: React.FC = () => {
@@ -53,7 +53,7 @@ const Products: React.FC = () => {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(category ? [category] : []);
   const minPrice = searchParams.get('minPrice') || '';
   const maxPrice = searchParams.get('maxPrice') || '';
-  const sort = searchParams.get('sort') || '-createdAt';
+  const sort = searchParams.get('sort') || 'newest';
   const page = parseInt(searchParams.get('page') || '1', 10);
   const q = searchParams.get('q') || '';
   const newArrival = searchParams.get('newArrival') || '';
@@ -375,7 +375,7 @@ const Products: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-navy-dark pt-20" ref={revealRef}>
+    <div className="min-h-screen bg-navy-dark pt-0" ref={revealRef}>
       
       {/* Mobile Filter Trigger */}
       <div className="lg:hidden sticky top-20 z-40 bg-navy-mid/80 backdrop-blur-md px-4 py-3 border-b border-white/5 flex justify-between items-center transition-all">
@@ -413,7 +413,7 @@ const Products: React.FC = () => {
 
       <div className="flex max-w-screen-2xl mx-auto">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-72 shrink-0 border-r border-white/5 min-h-[calc(100vh-80px)] pl-5 pr-6 py-10">
+        <aside className="hidden lg:block w-72 shrink-0 border-r border-white/5 min-h-[calc(100vh-80px)] pl-5 pr-6 pt-0 pb-10">
           <div className="sticky top-32">
             <h2 className="font-heading text-[16px] uppercase text-gray-600 font-normal mb-10">Navigation</h2>
             <FiltersContent />
@@ -421,7 +421,7 @@ const Products: React.FC = () => {
         </aside>
 
         {/* Main Grid */}
-        <main className="flex-1 p-6 md:p-10 lg:p-12">
+        <main className="flex-1 pl-4 pr-6 pb-12 pt-0 md:pl-6 md:pr-8 md:pb-12 md:pt-0 lg:pl-6 lg:pr-10 lg:pb-12 lg:pt-0">
           {q && !['clearance', 'deal', 'bundle'].includes(q.toLowerCase()) && (
             <div className="mb-10 animate-fade-in">
               <h1 className="text-gray-400 text-sm uppercase tracking-widest font-bold">Search results for:</h1>
@@ -452,11 +452,11 @@ const Products: React.FC = () => {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {products.map((product) => <ProductCard key={product._id} product={product} />)}
             </div>
           ) : (

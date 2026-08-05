@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* CENTER: Navigation links matching FUNPAREY style */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          <nav className="hidden xl:flex items-center gap-4 xl:gap-6">
             {navLinks.map((link) => {
               const isClearance = location.search.includes('q=clearance');
               const isNewArrival = location.search.includes('newArrival=true');
@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
                 >
                   <Link
                     to={link.path}
-                    className={`text-[12px] md:text-[13px] font-black uppercase tracking-wider transition-all relative pb-3 hover:text-artisan-highlight ${
+                    className={`text-[11px] xl:text-[12px] font-black uppercase tracking-wider transition-all relative pb-3 hover:text-artisan-highlight ${
                       isActive ? 'text-artisan-highlight' : 'text-gray-700'
                     }`}
                   >
@@ -222,7 +222,7 @@ const Navbar: React.FC = () => {
             {/* Mobile Hamburger toggle */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-gray-700 hover:text-artisan-highlight transition-colors"
+              className="xl:hidden p-2 text-gray-700 hover:text-artisan-highlight transition-colors"
               aria-label="Toggle mobile menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -241,13 +241,13 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black/40 z-[45] transition-opacity duration-300"
+          className="xl:hidden fixed inset-0 bg-black/40 z-[45] transition-opacity duration-300"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* MOBILE SIDE SLIDING DRAWER */}
-      <div className={`lg:hidden fixed top-0 left-0 bottom-0 w-[280px] max-w-[80vw] bg-white z-[48] shadow-2xl py-8 px-6 transform transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col ${
+      <div className={`xl:hidden fixed top-0 left-0 bottom-0 w-[280px] max-w-[80vw] bg-white z-[48] shadow-2xl py-8 px-6 transform transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col gap-2 mt-20">

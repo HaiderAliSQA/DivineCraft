@@ -174,7 +174,7 @@ const ProductDetail: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col space-y-8">
             <div className="space-y-4">
               <span className="inline-block px-3 py-1 rounded-md bg-electric/10 text-electric text-[10px] font-bold uppercase tracking-[0.2em] border border-electric/20">
-                Premium Mobile Tech
+                {product.category}
               </span>
               <h1 className="font-heading text-3xl md:text-5xl font-extrabold text-white leading-tight break-words">
                 {product.name}
@@ -302,7 +302,7 @@ const ProductDetail: React.FC = () => {
             <h2 className="font-heading text-2xl md:text-3xl font-extrabold text-white mb-10 uppercase text-center tracking-tight">
               You May Also <span className="text-electric">Like</span>
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
               {relatedProducts.map((p: any) => <ProductCard key={p._id} product={p} />)}
             </div>
           </div>

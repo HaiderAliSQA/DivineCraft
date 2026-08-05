@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Dynamic Category Filter bar (artisan style) */}
-          <div className="flex overflow-x-auto gap-3.5 px-2 pb-5 mb-12 no-scrollbar justify-start md:justify-center border-b border-artisan-subtle/10">
+          <div className="flex overflow-x-auto gap-3.5 px-2 pb-5 mb-12 no-scrollbar justify-start xl:justify-center border-b border-artisan-subtle/10">
             <button 
               onClick={() => setActiveCategory('all')}
               className={`shrink-0 px-6 py-2.5 text-[12px] font-black uppercase tracking-wider transition-all duration-300 ${
@@ -121,7 +121,7 @@ const Home: React.FC = () => {
           </div>
           
           {/* 5-Column Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             {loadingActive ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <ProductSkeleton key={i} />
