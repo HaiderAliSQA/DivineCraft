@@ -6,9 +6,9 @@ export default {
     extend: {
       colors: {
         navy: {
-          dark:  '#1B1512', // Warm deep cocoa dark background
-          mid:   '#28201B', // Warm dark chocolate container background
-          light: '#3C3029', // Warm stone/cocoa border
+          dark:  '#352922', // Softer lighter warm cocoa background (not white, not pitch dark)
+          mid:   '#44352C', // Softer lighter warm chocolate container background
+          light: '#5B473C', // Softer lighter warm stone/cocoa border
         },
         electric: '#d1a586',    // Warm light tan/gold primary accent
         'blue-glow': '#D4AF37', // Soft gold accent/glow
@@ -17,7 +17,7 @@ export default {
         'fm-red': '#C2593F',    // Warm terracotta red
         'fm-green': '#8F9779',  // Warm olive green
         artisan: {
-          bg: '#FAF7F2',        // Warm off-white / linen
+          bg: '#FFFFFF',        // Pure white background
           primary: '#3D1F0D',   // Deep walnut brown
           accent: '#B8860B',    // Antique gold
           highlight: '#C1440E', // Terracotta

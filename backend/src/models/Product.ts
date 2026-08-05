@@ -15,15 +15,14 @@ export interface IProduct extends Document {
   price: number;
   compareAtPrice?: number;
   category:
-    | 'wax-candles'
-    | 'resin-art'
-    | 'wooden-ware'
-    | 'studio-ceramics'
-    | 'macrame-hangings'
-    | 'leather-journals'
-    | 'terracotta-ware'
-    | 'pressed-flowers'
-    | 'other-accessories'
+    | 'baby-collection'
+    | 'home-decor'
+    | 'kitchen-dining'
+    | 'art-gifts'
+    | 'furniture'
+    | 'lighting'
+    | 'storage-boxes'
+    | 'religious-islamic-decor'
     | 'best-selling';
   brand?: string;
   compatibleModels: string[];
@@ -88,15 +87,14 @@ const productSchema = new Schema<IProduct>(
       type: String,
       required: [true, 'Category is required'],
       enum: [
-        'wax-candles',
-        'resin-art',
-        'wooden-ware',
-        'studio-ceramics',
-        'macrame-hangings',
-        'leather-journals',
-        'terracotta-ware',
-        'pressed-flowers',
-        'other-accessories',
+        'baby-collection',
+        'home-decor',
+        'kitchen-dining',
+        'art-gifts',
+        'furniture',
+        'lighting',
+        'storage-boxes',
+        'religious-islamic-decor',
         'best-selling',
       ],
       lowercase: true,

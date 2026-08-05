@@ -7,7 +7,6 @@ import { Category, CATEGORY_LABELS } from '../types';
 
 import HeroBanner from '../components/HeroBanner';
 import StatsBar from '../components/StatsBar';
-import CategoryGrid from '../components/CategoryGrid';
 
 const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
@@ -80,12 +79,9 @@ const Home: React.FC = () => {
       {/* 2. STATS BAR */}
       <StatsBar />
 
-      {/* 3. SHOP BY CATEGORY */}
-      <CategoryGrid />
-
       {/* 4. PRODUCT GRID — "Aesthetic Additions" */}
       <section className="py-20 bg-artisan-bg">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="w-full px-4 md:px-6">
           
           {/* Section Header & Subtitle */}
           <div className="text-center mb-12">
@@ -101,10 +97,10 @@ const Home: React.FC = () => {
           <div className="flex overflow-x-auto gap-3.5 px-2 pb-5 mb-12 no-scrollbar justify-start md:justify-center border-b border-artisan-subtle/10">
             <button 
               onClick={() => setActiveCategory('all')}
-              className={`shrink-0 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+              className={`shrink-0 px-6 py-2.5 text-[12px] font-black uppercase tracking-wider transition-all duration-300 ${
                 activeCategory === 'all' 
                   ? 'bg-artisan-primary text-white' 
-                  : 'bg-transparent text-artisan-subtle hover:text-artisan-primary'
+                  : 'bg-transparent text-gray-800 hover:text-artisan-primary'
               }`}
             >
               All Products
@@ -113,10 +109,10 @@ const Home: React.FC = () => {
               <button 
                 key={key} 
                 onClick={() => setActiveCategory(key)}
-                className={`shrink-0 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                className={`shrink-0 px-6 py-2.5 text-[12px] font-black uppercase tracking-wider transition-all duration-300 ${
                   activeCategory === key 
                     ? 'bg-artisan-primary text-white' 
-                    : 'bg-transparent text-artisan-subtle hover:text-artisan-primary'
+                    : 'bg-transparent text-gray-800 hover:text-artisan-primary'
                 }`}
               >
                 {label}

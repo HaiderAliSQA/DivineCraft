@@ -122,14 +122,14 @@ const AdminProducts: React.FC = () => {
             <table className="w-full text-left text-[14px] whitespace-nowrap border-separate border-spacing-0">
               <thead className="bg-navy-mid text-gray-400 uppercase tracking-[0.2em] text-[10px] font-bold border-b border-navy-light sticky top-[80px] z-20 shadow-xs">
                 <tr>
-                  <th className="px-4 py-5 w-10 text-center text-electric">#</th>
+                  <th className="px-4 py-5 w-12 text-center text-electric">#</th>
                   <th className="px-4 py-5">Product Details</th>
-                  <th className="px-4 py-5">Unit Price</th>
-                  <th className="px-4 py-5">Inventory</th>
-                  <th className="px-4 py-5">Visibility</th>
-                  <th className="px-4 py-5">Featured</th>
-                  <th className="px-4 py-5">Discontinued</th>
-                  <th className="px-4 py-5 text-right">Actions</th>
+                  <th className="px-4 py-5 w-32">Unit Price</th>
+                  <th className="px-4 py-5 w-40">Inventory</th>
+                  <th className="px-4 py-5 w-28 text-center">Visibility</th>
+                  <th className="px-4 py-5 w-28 text-center">Featured</th>
+                  <th className="px-4 py-5 w-28 text-center">Discontinued</th>
+                  <th className="px-4 py-5 w-28 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-navy-light">
@@ -140,23 +140,23 @@ const AdminProducts: React.FC = () => {
                     </td>
                     <td className="px-4 py-6">
                       <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-navy-light p-1 border border-navy-light group-hover:border-gold/50 transition-colors">
+                        <div className="w-16 h-16 bg-navy-light p-1 border border-navy-light group-hover:border-gold/50 transition-colors shrink-0">
                           {product.images[0] ? (
                             <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[8px] font-bold uppercase text-gray-400">NO IMAGE</div>
                           )}
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <p className="text-white font-bold text-[14px] uppercase tracking-wide truncate w-64" title={product.name}>{product.name}</p>
+                        <div className="flex flex-col gap-1 min-w-0">
+                          <p className="text-white font-bold text-[14px] uppercase tracking-wide truncate max-w-xs sm:max-w-md lg:max-w-lg" title={product.name}>{product.name}</p>
                           <p className="text-electric text-[10px] uppercase tracking-[0.2em] font-bold">{product.category.replace(/-/g, ' ')}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-6 text-white font-bold font-playfair text-[18px]">
+                    <td className="px-4 py-6 text-white font-bold font-playfair text-[18px] w-32">
                       {formatPrice(product.price)}
                     </td>
-                    <td className="px-4 py-6">
+                    <td className="px-4 py-6 w-40">
                       <div className="flex flex-col gap-1">
                         {editingStockId === product._id ? (
                           <div className="flex items-center gap-1">
@@ -166,9 +166,9 @@ const AdminProducts: React.FC = () => {
                               value={stockInputValue}
                               onChange={(e) => setStockInputValue(e.target.value)}
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleStockSave(product._id);
-                                if (e.key === 'Escape') setEditingStockId(null);
-                              }}
+                                  if (e.key === 'Enter') handleStockSave(product._id);
+                                  if (e.key === 'Escape') setEditingStockId(null);
+                                }}
                               autoFocus
                               className="w-20 border border-fm-gold px-2 py-1 text-[12px] text-white font-bold outline-none"
                             />
@@ -188,8 +188,8 @@ const AdminProducts: React.FC = () => {
                             className="text-left group/stock"
                           >
                             <span className={`text-[11px] font-bold uppercase tracking-wider underline-offset-2 group-hover/stock:underline ${
-                              product.stock === 0 ? 'text-red-600' : product.stock <= 5 ? 'text-amber-600' : 'text-emerald-600'
-                            }`}>
+                                product.stock === 0 ? 'text-red-600' : product.stock <= 5 ? 'text-amber-600' : 'text-emerald-600'
+                              }`}>
                               {product.stock} Units
                             </span>
                             <span className="block text-[9px] text-white-3 mt-0.5">click to edit</span>
@@ -200,22 +200,22 @@ const AdminProducts: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-6">
-                      <button onClick={() => handleToggle(product._id, 'visibility')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isVisible ? 'bg-electric' : 'bg-navy-light'}`}>
+                    <td className="px-4 py-6 w-28 text-center">
+                      <button onClick={() => handleToggle(product._id, 'visibility')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isVisible ? 'bg-electric' : 'bg-navy-light'} mx-auto block`}>
                         <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isVisible ? 'left-[26px]' : 'left-1'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6">
-                      <button onClick={() => handleToggle(product._id, 'featured')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isFeatured ? 'bg-gold' : 'bg-navy-light'}`}>
+                    <td className="px-4 py-6 w-28 text-center">
+                      <button onClick={() => handleToggle(product._id, 'featured')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isFeatured ? 'bg-gold' : 'bg-navy-light'} mx-auto block`}>
                         <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isFeatured ? 'left-[26px]' : 'left-1'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6">
-                      <button onClick={() => handleToggle(product._id, 'discontinued')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isDiscontinued ? 'bg-fm-red' : 'bg-navy-light'}`}>
+                    <td className="px-4 py-6 w-28 text-center">
+                      <button onClick={() => handleToggle(product._id, 'discontinued')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isDiscontinued ? 'bg-fm-red' : 'bg-navy-light'} mx-auto block`}>
                         <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isDiscontinued ? 'left-[26px]' : 'left-1'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6 text-right">
+                    <td className="px-4 py-6 text-right w-28">
                       <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link to={`/admin/products/edit/${product._id}`} className="bg-navy-mid p-2.5 border border-navy-light hover:border-gold hover:text-electric transition-all shadow-sm" title="Edit">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>

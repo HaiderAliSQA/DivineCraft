@@ -6,38 +6,35 @@ export interface ProductSize {
 }
 
 export type Category =
-  | 'wax-candles'
-  | 'resin-art'
-  | 'wooden-ware'
-  | 'studio-ceramics'
-  | 'macrame-hangings'
-  | 'leather-journals'
-  | 'terracotta-ware'
-  | 'pressed-flowers'
-  | 'other-accessories';
+  | 'baby-collection'
+  | 'home-decor'
+  | 'kitchen-dining'
+  | 'art-gifts'
+  | 'furniture'
+  | 'lighting'
+  | 'storage-boxes'
+  | 'religious-islamic-decor';
 
 export const CATEGORY_LABELS: Record<Category, string> = {
-  'wax-candles':       'Wax Candles',
-  'resin-art':         'Resin Art',
-  'wooden-ware':       'Wooden Ware',
-  'studio-ceramics':   'Studio Ceramics',
-  'macrame-hangings':  'Macrame Hangings',
-  'leather-journals':  'Leather Journals',
-  'terracotta-ware':   'Terracotta Ware',
-  'pressed-flowers':   'Pressed Flowers',
-  'other-accessories': 'Other Accessories',
+  'baby-collection':           'Baby Collection',
+  'home-decor':                'Home Décor',
+  'kitchen-dining':            'Kitchen & Dining',
+  'art-gifts':                 'Art & Gifts',
+  'furniture':                 'Furniture',
+  'lighting':                  'Lighting',
+  'storage-boxes':             'Storage & Boxes',
+  'religious-islamic-decor':   'Religious & Islamic Décor',
 };
 
 export const CATEGORY_ICONS: Record<Category, string> = {
-  'wax-candles':       '🕯️',
-  'resin-art':         '🎨',
-  'wooden-ware':       '🪵',
-  'studio-ceramics':   '🏺',
-  'macrame-hangings':  '🕸️',
-  'leather-journals':  '📔',
-  'terracotta-ware':   '🧱',
-  'pressed-flowers':   '🌸',
-  'other-accessories': '📦',
+  'baby-collection':           '🍼',
+  'home-decor':                '🏺',
+  'kitchen-dining':            '🍽️',
+  'art-gifts':                 '🎁',
+  'furniture':                 '🪑',
+  'lighting':                  '💡',
+  'storage-boxes':             '📦',
+  'religious-islamic-decor':   '🌙',
 };
 
 export interface Product {

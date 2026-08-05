@@ -43,7 +43,7 @@ const AdminLayout: React.FC = () => {
   ];
 
   return (
-    <div className="admin-theme-light h-screen bg-navy-dark font-body text-white flex overflow-hidden">
+    <div className="h-screen bg-navy-dark font-body text-white flex overflow-hidden">
 
       {/* Mobile Backdrop Overlay */}
       {isSidebarOpen && (

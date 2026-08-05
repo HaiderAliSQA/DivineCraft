@@ -26,6 +26,9 @@ import { findFreePort, updateFrontendEnv } from './utils/port';
 
 const app = express();
 
+// Trust reverse proxy (needed for express-rate-limit behind Render/proxies)
+app.set('trust proxy', 1);
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
 app.use(helmet({

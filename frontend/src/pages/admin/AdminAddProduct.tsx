@@ -10,16 +10,26 @@ import { Category, CATEGORY_LABELS } from '../../types';
 import toast from 'react-hot-toast';
 
 const CATEGORIES = [
-  'wax-candles',
-  'resin-art',
-  'wooden-ware',
-  'studio-ceramics',
-  'macrame-hangings',
-  'leather-journals',
-  'terracotta-ware',
-  'pressed-flowers',
-  'other-accessories',
+  'baby-collection',
+  'home-decor',
+  'kitchen-dining',
+  'art-gifts',
+  'furniture',
+  'lighting',
+  'storage-boxes',
+  'religious-islamic-decor',
 ] as const;
+
+const SUBCATEGORIES: Record<string, string[]> = {
+  'baby-collection': ['Wooden Toys', 'Baby Decor', 'Baby Gift Sets', 'Nursery Accessories'],
+  'home-decor': ['Decorative Vases', 'Decorative Jars', 'Wall Hangings', 'Table Décor', 'Decorative Plates', 'Decorative Bowls', 'Showpieces'],
+  'kitchen-dining': ['Serving Trays', 'Fruit Baskets', 'Ash Trays', 'Coasters', 'Spice Boxes', 'Bowls', 'Kitchen Organizers'],
+  'art-gifts': ['Gift Boxes', 'Jewelry Boxes', 'Handmade Gifts', 'Mini Musical Instruments', 'Decorative Crafts', 'Souvenirs'],
+  'furniture': ['Side Tables', 'Nesting Tables', 'Coffee Tables', 'Stools', 'Plant Stands', 'Display Stands'],
+  'lighting': ['Wooden Lamps', 'Table Lamps', 'Hanging Lanterns', 'Decorative Lanterns', 'Candle Holders'],
+  'storage-boxes': ['Storage Boxes', 'Jewelry Boxes', 'Organizer Boxes', 'Wooden Chests', 'Keepsake Boxes'],
+  'religious-islamic-decor': ['Islamic Wall Art', 'Arabic Calligraphy', 'Quran Stands (Rehal)', 'Islamic Decorative Pieces', 'Mosque Models', 'Ramadan & Eid Collection']
+};
 
 const productSchema = z.object({
   name: z.string().min(3, 'Name is required'),
@@ -27,10 +37,14 @@ const productSchema = z.object({
   price: z.number().min(1, 'Price must be greater than 0'),
   compareAtPrice: z.number().optional().nullable(),
   category: z.string().min(1, 'Category is required'),
+  subcategory: z.string().optional(),
   stock: z.number().min(0, 'Stock cannot be negative'),
   isVisible: z.boolean(),
   isFeatured: z.boolean(),
   isNewArrival: z.boolean(),
+  isClearance: z.boolean().optional(),
+  isDeal: z.boolean().optional(),
+  isBundle: z.boolean().optional(),
   colors: z.string(), // comma separated
   tags: z.string(), // comma separated
   brand: z.string().optional(),
@@ -47,13 +61,17 @@ const AdminAddProduct: React.FC = () => {
 
   const [images, setImages] = useState<string[]>([]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<ProductFormValues>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      category: 'wax-candles',
+      category: 'baby-collection',
+      subcategory: '',
       isVisible: true,
       isFeatured: false,
       isNewArrival: true,
+      isClearance: false,
+      isDeal: false,
+      isBundle: false,
       stock: 0,
       price: 0,
       colors: '',
@@ -62,6 +80,8 @@ const AdminAddProduct: React.FC = () => {
       compatibleModels: '',
     },
   });
+
+  const watchedCategory = watch('category');
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -109,15 +129,37 @@ const AdminAddProduct: React.FC = () => {
       return;
     }
 
+    const tagsArray = data.tags.split(',').map(t => t.trim()).filter(Boolean);
+    if (data.subcategory) {
+      if (!tagsArray.some(t => t.toLowerCase() === data.subcategory?.toLowerCase())) {
+        tagsArray.push(data.subcategory);
+      }
+    }
+
+    if (data.isClearance && !tagsArray.some(t => t.toLowerCase() === 'clearance')) {
+      tagsArray.push('clearance');
+    }
+    if (data.isDeal && !tagsArray.some(t => t.toLowerCase() === 'deal')) {
+      tagsArray.push('deal');
+    }
+    if (data.isBundle && !tagsArray.some(t => t.toLowerCase() === 'bundle')) {
+      tagsArray.push('bundle');
+    }
+
     const payload = {
       ...data,
       colors: data.colors.split(',').map(c => c.trim()).filter(Boolean),
-      tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+      tags: tagsArray,
       compatibleModels: data.compatibleModels.split(',').map(m => m.trim()).filter(Boolean),
       images,
       sizes: [], // Empty sizes for accessories
       compareAtPrice: data.compareAtPrice || undefined,
     };
+
+    delete (payload as any).subcategory;
+    delete (payload as any).isClearance;
+    delete (payload as any).isDeal;
+    delete (payload as any).isBundle;
 
     try {
       await createProduct(payload as any).unwrap();
@@ -130,7 +172,7 @@ const AdminAddProduct: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-12 font-dm">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 font-dm">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="font-playfair text-white text-3xl font-semibold tracking-wide">Add New Product</h1>
@@ -207,9 +249,9 @@ const AdminAddProduct: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div>
-                <label className="block text-[13px] font-semibold text-gray-300 mb-2 uppercase tracking-wide">Category</label>
+                <label className="block text-[13px] font-semibold text-gray-300 mb-2 uppercase tracking-wide">Category *</label>
                 <select
                   {...register('category')}
                   className="w-full bg-navy-dark border border-navy-light text-white font-dm px-4 py-3 outline-none focus:border-electric"
@@ -217,6 +259,18 @@ const AdminAddProduct: React.FC = () => {
                   {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_LABELS[c as Category]}</option>)}
                 </select>
                 {errors.category && <p className="text-fm-red text-xs mt-1.5">{errors.category.message}</p>}
+              </div>
+              <div>
+                <label className="block text-[13px] font-semibold text-gray-300 mb-2 uppercase tracking-wide">Subcategory (Optional)</label>
+                <select
+                  {...register('subcategory')}
+                  className="w-full bg-navy-dark border border-navy-light text-white font-dm px-4 py-3 outline-none focus:border-electric"
+                >
+                  <option value="">None</option>
+                  {(SUBCATEGORIES[watchedCategory] || []).map(sub => (
+                    <option key={sub} value={sub}>{sub}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-[13px] font-semibold text-gray-300 mb-2 uppercase tracking-wide">Brand</label>
@@ -235,7 +289,11 @@ const AdminAddProduct: React.FC = () => {
         <div className="bg-navy-mid border border-navy-light p-8 shadow-sm">
           <h2 className="text-lg font-playfair text-white mb-6 border-b border-navy-light pb-3 font-semibold flex justify-between items-center">
             <span>Media (Images)</span>
-            {isUploading && <span className="text-xs text-gray-400 animate-pulse uppercase tracking-wider font-dm">Uploading...</span>}
+            {isUploading && (
+              <span className="text-sm text-[#FF5A36] font-bold animate-pulse uppercase tracking-widest flex items-center gap-1.5">
+                ⚡ Uploading Images...
+              </span>
+            )}
           </h2>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6 mb-4">
@@ -245,13 +303,21 @@ const AdminAddProduct: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(img)}
-                  className="absolute top-1 right-1 bg-fm-red text-white rounded p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-1 right-1 bg-fm-red hover:bg-red-700 text-white rounded p-1.5 transition-colors shadow-md z-10"
                   title="Remove image"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
               </div>
             ))}
+
+            {isUploading && (
+              <div className="aspect-square flex flex-col items-center justify-center border border-dashed border-gray-500 rounded-sm bg-navy-dark animate-pulse">
+                <div className="w-8 h-8 border-4 border-gray-600 border-t-[#FF5A36] rounded-full animate-spin mb-2"></div>
+                <span className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Uploading...</span>
+              </div>
+            )}
+
             <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-navy-light rounded-sm hover:border-electric cursor-pointer transition-colors text-gray-400 hover:text-electric bg-navy-dark hover:bg-electric/10 relative">
               <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               <span className="text-[11px] uppercase tracking-widest font-bold">Upload</span>
@@ -307,7 +373,19 @@ const AdminAddProduct: React.FC = () => {
             </label>
             <label className="flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" {...register('isNewArrival')} className="w-4 h-4 rounded-sm border-navy-light text-electric focus:ring-electric" />
-              <span className="text-sm font-medium text-white group-hover:text-electric transition-colors">New Arrival Label</span>
+              <span className="text-sm font-medium text-white group-hover:text-electric transition-colors">New Arrival</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input type="checkbox" {...register('isClearance')} className="w-4 h-4 rounded-sm border-navy-light text-electric focus:ring-electric" />
+              <span className="text-sm font-medium text-white group-hover:text-electric transition-colors">Clearance Sale</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input type="checkbox" {...register('isDeal')} className="w-4 h-4 rounded-sm border-navy-light text-electric focus:ring-electric" />
+              <span className="text-sm font-medium text-white group-hover:text-electric transition-colors">Deal of the Week</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input type="checkbox" {...register('isBundle')} className="w-4 h-4 rounded-sm border-navy-light text-electric focus:ring-electric" />
+              <span className="text-sm font-medium text-white group-hover:text-electric transition-colors">Bundle Offer</span>
             </label>
           </div>
         </div>

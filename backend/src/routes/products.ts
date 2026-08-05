@@ -32,9 +32,12 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 
     const filter: Record<string, any> = { ...publicQuery };
 
-    // Category filter must be exact match, case-insensitive
+    // Category filter supports multiple comma-separated values
     if (category) {
-      filter.category = category.toLowerCase().trim();
+      const catList = category.split(',').map(c => c.toLowerCase().trim()).filter(Boolean);
+      if (catList.length > 0) {
+        filter.category = { $in: catList };
+      }
     }
 
     // Also ensure isVisible filter is applied
@@ -61,15 +64,23 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       filter['price'] = priceQuery;
     }
 
+    // Search query supports multiple comma-separated terms (subcategories)
     if (search) {
-      const searchRegex = new RegExp(search, 'i');
-      filter['$or'] = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { brand: { $regex: search, $options: 'i' } },
-        { compatibleModels: { $in: [searchRegex] } },
-        { tags: { $in: [searchRegex] } },
-      ];
+      const searchTerms = search.split(',').map(s => s.trim()).filter(Boolean);
+      if (searchTerms.length > 0) {
+        filter['$or'] = searchTerms.map(term => {
+          const regex = new RegExp(term, 'i');
+          return {
+            $or: [
+              { name: { $regex: term, $options: 'i' } },
+              { description: { $regex: term, $options: 'i' } },
+              { brand: { $regex: term, $options: 'i' } },
+              { compatibleModels: { $in: [regex] } },
+              { tags: { $in: [regex] } },
+            ]
+          };
+        });
+      }
     }
 
     if (featured === 'true') {

@@ -1,23 +1,44 @@
-// frontend/src/pages/Products.tsx
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useGetProductsQuery } from '../store/api/productsApi';
 import ProductCard from '../components/ui/ProductCard';
 import ProductSkeleton from '../components/ui/ProductSkeleton';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
-const SIDEBAR_CATEGORIES = [
-  { value: '',                  label: 'All Products' },
-  { value: 'wax-candles',       label: 'Wax Candles' },
-  { value: 'resin-art',         label: 'Resin Art' },
-  { value: 'wooden-ware',       label: 'Wooden Ware' },
-  { value: 'studio-ceramics',   label: 'Studio Ceramics' },
-  { value: 'macrame-hangings',  label: 'Macrame Hangings' },
-  { value: 'leather-journals',  label: 'Leather Journals' },
-  { value: 'terracotta-ware',   label: 'Terracotta Ware' },
-  { value: 'pressed-flowers',   label: 'Pressed Flowers' },
-  { value: 'other-accessories', label: 'Other Accessories' },
-];
+const RELATED_CATEGORIES = {
+  'baby-collection': {
+    label: 'Baby Collection',
+    items: ['Wooden Toys', 'Baby Decor', 'Baby Gift Sets', 'Nursery Accessories']
+  },
+  'home-decor': {
+    label: 'Home Décor',
+    items: ['Decorative Vases', 'Decorative Jars', 'Wall Hangings', 'Table Décor', 'Decorative Plates', 'Decorative Bowls', 'Showpieces']
+  },
+  'kitchen-dining': {
+    label: 'Kitchen & Dining',
+    items: ['Serving Trays', 'Fruit Baskets', 'Ash Trays', 'Coasters', 'Spice Boxes', 'Bowls', 'Kitchen Organizers']
+  },
+  'art-gifts': {
+    label: 'Art & Gifts',
+    items: ['Gift Boxes', 'Jewelry Boxes', 'Handmade Gifts', 'Mini Musical Instruments', 'Decorative Crafts', 'Souvenirs']
+  },
+  'furniture': {
+    label: 'Furniture',
+    items: ['Side Tables', 'Nesting Tables', 'Coffee Tables', 'Stools', 'Plant Stands', 'Display Stands']
+  },
+  'lighting': {
+    label: 'Lighting',
+    items: ['Wooden Lamps', 'Table Lamps', 'Hanging Lanterns', 'Decorative Lanterns', 'Candle Holders']
+  },
+  'storage-boxes': {
+    label: 'Storage & Boxes',
+    items: ['Storage Boxes', 'Jewelry Boxes', 'Organizer Boxes', 'Wooden Chests', 'Keepsake Boxes']
+  },
+  'religious-islamic-decor': {
+    label: 'Religious & Islamic Décor',
+    items: ['Islamic Wall Art', 'Arabic Calligraphy', 'Quran Stands (Rehal)', 'Islamic Decorative Pieces', 'Mosque Models', 'Ramadan & Eid Collection']
+  }
+};
 
 const SORTS = [
   { label: 'Newest Arrivals', value: '-createdAt' },
@@ -28,13 +49,22 @@ const SORTS = [
 const Products: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  
   const category = searchParams.get('category') || '';
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(category ? [category] : []);
   const minPrice = searchParams.get('minPrice') || '';
   const maxPrice = searchParams.get('maxPrice') || '';
   const sort = searchParams.get('sort') || '-createdAt';
   const page = parseInt(searchParams.get('page') || '1', 10);
   const q = searchParams.get('q') || '';
+  const newArrival = searchParams.get('newArrival') || '';
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Fetch the absolute highest priced product in the database for the max price range limit
+  const { data: maxPriceData } = useGetProductsQuery({
+    sortBy: '-price',
+    limit: 1
+  });
+  const maxLimit = maxPriceData?.data?.products?.[0]?.price || 37500;
 
   const { data, isLoading } = useGetProductsQuery({
     category,
@@ -42,6 +72,7 @@ const Products: React.FC = () => {
     maxPrice: maxPrice || undefined,
     sortBy: sort,
     search: q || undefined,
+    newArrival: newArrival || undefined,
     page,
     limit: 12,
   });
@@ -50,6 +81,9 @@ const Products: React.FC = () => {
   const revealRef = useScrollReveal(0.1);
   const totalPages = data?.data?.pages || 1;
   const totalItems = data?.data?.total || 0;
+
+  const minVal = minPrice ? parseInt(minPrice, 10) : 0;
+  const maxVal = maxPrice ? parseInt(maxPrice, 10) : maxLimit;
 
   const updateParam = useCallback((key: string, value: string) => {
     setSearchParams(params => {
@@ -67,51 +101,255 @@ const Products: React.FC = () => {
     setSearchParams(new URLSearchParams());
   };
 
+  const handleTrackInteraction = (clientX: number) => {
+    if (!trackRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const clickX = clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+    const clickVal = Math.round(pct * maxLimit);
+
+    // Determine which thumb is closer to click point
+    if (Math.abs(clickVal - minVal) < Math.abs(clickVal - maxVal)) {
+      const nextMin = Math.min(clickVal, maxVal - 50);
+      updateParam('minPrice', nextMin.toString());
+    } else {
+      const nextMax = Math.max(clickVal, minVal + 50);
+      updateParam('maxPrice', nextMax.toString());
+    }
+  };
+
   const FiltersContent = () => (
     <div className="space-y-10">
-      {/* Category */}
+      {/* Price Range Slider */}
       <div>
-        <h3 className="font-heading text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-6 font-extrabold">Categories</h3>
-        <div className="space-y-4">
-          {SIDEBAR_CATEGORIES.map(c => (
-            <label key={c.value} className="flex items-center gap-3 cursor-pointer group">
-              <div className="relative flex items-center justify-center">
-                <input 
-                  type="radio" 
-                  name="category" 
-                  value={c.value} 
-                  checked={category === c.value}
-                  onChange={() => updateParam('category', c.value)}
-                  className="peer appearance-none w-5 h-5 border-2 border-white/10 rounded-full checked:border-electric transition-all cursor-pointer"
-                />
-                <div className="absolute w-2.5 h-2.5 bg-electric rounded-full opacity-0 peer-checked:opacity-100 transition-opacity" />
-              </div>
-              <span className={`font-body text-sm transition-colors ${category === c.value ? 'text-white font-bold' : 'text-gray-400 group-hover:text-gray-200'}`}>
-                {c.label}
-              </span>
-            </label>
-          ))}
+        <h3 className="font-heading text-[16px] uppercase text-gray-400 mb-6 font-normal border-b border-white/5 pb-2">Filter by Price</h3>
+        <div 
+          ref={trackRef}
+          onMouseDown={(e) => handleTrackInteraction(e.clientX)}
+          onMouseMove={(e) => {
+            if (e.buttons === 1) { // Left click is dragged
+              handleTrackInteraction(e.clientX);
+            }
+          }}
+          className="relative w-full h-8 flex items-center cursor-pointer select-none"
+        >
+          {/* Track background - Thicker (bold) track */}
+          <div className="absolute left-0 right-0 h-1.5 bg-gray-600 rounded-full" />
+          
+          {/* Active Range Highlight */}
+          <div 
+            className="absolute h-1.5 bg-artisan-accent rounded-full"
+            style={{
+              left: `${(minVal / maxLimit) * 100}%`,
+              right: `${100 - (maxVal / maxLimit) * 100}%`
+            }}
+          />
+
+          {/* Left Pointer Thumb (Min) */}
+          <div 
+            className="absolute w-4 h-4 rounded-full bg-black -ml-2 top-1/2 -translate-y-1/2 shadow-md hover:scale-110 transition-transform"
+            style={{ left: `${(minVal / maxLimit) * 100}%` }}
+          />
+
+          {/* Right Pointer Thumb (Max) */}
+          <div 
+            className="absolute w-4 h-4 rounded-full bg-black -ml-2 top-1/2 -translate-y-1/2 shadow-md hover:scale-110 transition-transform"
+            style={{ left: `${(maxVal / maxLimit) * 100}%` }}
+          />
+        </div>
+        <div className="text-left mt-2 select-none">
+          <span className="text-[14px] font-medium text-artisan-accent">
+            Rs {minVal} — Rs {maxVal}
+          </span>
         </div>
       </div>
 
-      {/* Price Range */}
+      {/* Category */}
       <div>
-        <h3 className="font-heading text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-6 font-extrabold">Price (PKR)</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <input 
-            type="number" 
-            placeholder="Min" 
-            value={minPrice}
-            onChange={(e) => updateParam('minPrice', e.target.value)}
-            className="w-full bg-navy-dark border border-white/5 rounded-xl text-white font-body px-4 py-3 text-xs placeholder-gray-600 focus:outline-none focus:border-electric transition-colors"
-          />
-          <input 
-            type="number" 
-            placeholder="Max" 
-            value={maxPrice}
-            onChange={(e) => updateParam('maxPrice', e.target.value)}
-            className="w-full bg-navy-dark border border-white/5 rounded-xl text-white font-body px-4 py-3 text-xs placeholder-gray-600 focus:outline-none focus:border-electric transition-colors"
-          />
+        <h3 className="font-heading text-[16px] uppercase text-gray-400 mb-6 font-normal border-b border-white/5 pb-2">Related Categories</h3>
+        <div className="space-y-4 font-body max-h-[350px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:hover:bg-gray-300">
+          {/* All Products */}
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              onClick={() => {
+                setSearchParams(new URLSearchParams());
+              }}
+              className={`w-4 h-4 rounded border transition-all flex items-center justify-center shrink-0 ${
+                !category && !q 
+                  ? 'bg-artisan-accent border-artisan-accent text-white' 
+                  : 'border-gray-300 bg-white text-transparent'
+              }`}
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </button>
+            <span className={`text-[13px] font-bold uppercase tracking-wider transition-all cursor-pointer ${!category && !q ? 'text-artisan-highlight' : 'text-gray-700'}`} onClick={() => setSearchParams(new URLSearchParams())}>
+              All Products
+            </span>
+          </div>
+
+          {Object.entries(RELATED_CATEGORIES).map(([catKey, catVal]) => {
+            const activeCategories = category ? category.split(',').filter(Boolean) : [];
+            const isCatActive = activeCategories.includes(catKey);
+            const isExpanded = expandedCategories.includes(catKey);
+
+            return (
+              <div key={catKey} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  {/* Plus / Minus Expand Button */}
+                  <button
+                    onClick={() => {
+                      setExpandedCategories(prev =>
+                        prev.includes(catKey)
+                          ? prev.filter(k => k !== catKey)
+                          : [...prev, catKey]
+                      );
+                    }}
+                    className="text-gray-400 font-extrabold text-xs w-4 h-4 flex items-center justify-center hover:text-gray-900 transition-colors shrink-0"
+                  >
+                    {isExpanded ? '—' : '+'}
+                  </button>
+
+                  {/* Parent Checkbox */}
+                  <button
+                    onClick={() => {
+                      setSearchParams(prevParams => {
+                        const params = new URLSearchParams(prevParams);
+                        const nextCats = isCatActive
+                          ? activeCategories.filter(k => k !== catKey)
+                          : [...activeCategories, catKey];
+                        
+                        if (nextCats.length > 0) {
+                          params.set('category', nextCats.join(','));
+                        } else {
+                          params.delete('category');
+                        }
+                        params.set('page', '1');
+                        return params;
+                      });
+                      if (!isExpanded) {
+                        setExpandedCategories(prev => [...prev, catKey]);
+                      }
+                    }}
+                    className={`w-4 h-4 rounded border transition-all flex items-center justify-center shrink-0 ${
+                      isCatActive 
+                        ? 'bg-artisan-accent border-artisan-accent text-white' 
+                        : 'border-gray-300 bg-white text-transparent'
+                    }`}
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </button>
+
+                  {/* Parent Label */}
+                  <span 
+                    onClick={() => {
+                      setSearchParams(prevParams => {
+                        const params = new URLSearchParams(prevParams);
+                        const nextCats = isCatActive
+                          ? activeCategories.filter(k => k !== catKey)
+                          : [...activeCategories, catKey];
+                        
+                        if (nextCats.length > 0) {
+                          params.set('category', nextCats.join(','));
+                        } else {
+                          params.delete('category');
+                        }
+                        params.set('page', '1');
+                        return params;
+                      });
+                      if (!isExpanded) {
+                        setExpandedCategories(prev => [...prev, catKey]);
+                      }
+                    }}
+                    className={`text-[18px] font-normal transition-all cursor-pointer select-none ${isCatActive ? 'text-artisan-accent' : 'text-gray-300 hover:text-white'}`}
+                  >
+                    {catVal.label}
+                  </span>
+                </div>
+
+                {/* Subcategories (Indented and visible when parent category is expanded) */}
+                {isExpanded && (
+                  <div className="pl-4 space-y-2 mt-1">
+                    {catVal.items.map((subItem) => {
+                      const activeSubcategories = q ? q.split(',').filter(Boolean) : [];
+                      const isSubActive = activeSubcategories.some(s => s.toLowerCase() === subItem.toLowerCase());
+
+                      return (
+                        <div key={subItem} className="flex items-center gap-2">
+                          
+                          {/* Subcategory Checkbox */}
+                          <button
+                            onClick={() => {
+                              setSearchParams(prevParams => {
+                                const params = new URLSearchParams(prevParams);
+                                const nextSubs = isSubActive
+                                  ? activeSubcategories.filter(s => s.toLowerCase() !== subItem.toLowerCase())
+                                  : [...activeSubcategories, subItem];
+
+                                if (nextSubs.length > 0) {
+                                  params.set('q', nextSubs.join(','));
+                                } else {
+                                  params.delete('q');
+                                }
+                                // Ensure this subcategory's parent category is also included in search
+                                if (!isCatActive) {
+                                  const nextCats = [...activeCategories, catKey];
+                                  params.set('category', nextCats.join(','));
+                                }
+                                params.set('page', '1');
+                                return params;
+                              });
+                            }}
+                            className={`w-4 h-4 rounded border transition-all flex items-center justify-center shrink-0 ${
+                              isSubActive 
+                                ? 'bg-artisan-accent border-artisan-accent text-white' 
+                                : 'border-gray-500 bg-white/10 text-transparent'
+                            }`}
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </button>
+
+                          {/* Subcategory Label */}
+                          <span 
+                            onClick={() => {
+                              setSearchParams(prevParams => {
+                                const params = new URLSearchParams(prevParams);
+                                const nextSubs = isSubActive
+                                  ? activeSubcategories.filter(s => s.toLowerCase() !== subItem.toLowerCase())
+                                  : [...activeSubcategories, subItem];
+
+                                if (nextSubs.length > 0) {
+                                  params.set('q', nextSubs.join(','));
+                                } else {
+                                  params.delete('q');
+                                }
+                                if (!isCatActive) {
+                                  const nextCats = [...activeCategories, catKey];
+                                  params.set('category', nextCats.join(','));
+                                }
+                                params.set('page', '1');
+                                return params;
+                              });
+                            }}
+                            className={`text-[16px] font-normal transition-all cursor-pointer select-none ${
+                              isSubActive ? 'text-artisan-accent' : 'text-gray-400 hover:text-white'
+                            }`}
+                          >
+                            {subItem}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -123,6 +361,18 @@ const Products: React.FC = () => {
       </button>
     </div>
   );
+
+  const getPageTitle = () => {
+    if (newArrival === 'true') return 'New Arrivals';
+    if (q.toLowerCase() === 'clearance') return 'Clearance';
+    if (q.toLowerCase() === 'deal') return 'Deal of the Week';
+    if (q.toLowerCase() === 'bundle') return 'Bundles';
+    if (category) {
+      const catKey = category.split(',')[0];
+      return RELATED_CATEGORIES[catKey as keyof typeof RELATED_CATEGORIES]?.label || category.replace('-', ' ');
+    }
+    return 'All Collection';
+  };
 
   return (
     <div className="min-h-screen bg-navy-dark pt-20" ref={revealRef}>
@@ -163,16 +413,16 @@ const Products: React.FC = () => {
 
       <div className="flex max-w-screen-2xl mx-auto">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-72 shrink-0 border-r border-white/5 min-h-[calc(100vh-80px)] p-10">
+        <aside className="hidden lg:block w-72 shrink-0 border-r border-white/5 min-h-[calc(100vh-80px)] pl-5 pr-6 py-10">
           <div className="sticky top-32">
-            <h2 className="font-heading text-xs tracking-[0.4em] uppercase text-gray-600 font-extrabold mb-10">Navigation</h2>
+            <h2 className="font-heading text-[16px] uppercase text-gray-600 font-normal mb-10">Navigation</h2>
             <FiltersContent />
           </div>
         </aside>
 
         {/* Main Grid */}
         <main className="flex-1 p-6 md:p-10 lg:p-12">
-          {q && (
+          {q && !['clearance', 'deal', 'bundle'].includes(q.toLowerCase()) && (
             <div className="mb-10 animate-fade-in">
               <h1 className="text-gray-400 text-sm uppercase tracking-widest font-bold">Search results for:</h1>
               <p className="text-white text-3xl font-extrabold mt-2">"{q}"</p>
@@ -182,7 +432,7 @@ const Products: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
             <div className="space-y-1">
               <h2 className="font-heading text-2xl font-extrabold text-white uppercase tracking-tight">
-                {category ? category.replace('-', ' ') : 'All Collection'}
+                {getPageTitle()}
               </h2>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                 Showing {totalItems} items across Pakistan

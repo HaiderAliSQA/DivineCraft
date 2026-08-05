@@ -24,6 +24,33 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [isDescHovered, setIsDescHovered] = useState(false);
   const [isDescClicked, setIsDescClicked] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(0);
+
+  const handlePrevImage = () => {
+    if (!product?.images) return;
+    setMainImageIndex(prev => (prev - 1 + product.images.length) % product.images.length);
+  };
+
+  const handleNextImage = () => {
+    if (!product?.images) return;
+    setMainImageIndex(prev => (prev + 1) % product.images.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!product?.images || product.images.length <= 1) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+      handleNextImage();
+    }
+    if (diff < -50) {
+      handlePrevImage();
+    }
+  };
 
   // Reset quantity and main image index when slug changes to avoid state carryover
   React.useEffect(() => {
@@ -67,16 +94,16 @@ const ProductDetail: React.FC = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-navy-dark text-white pt-24 pb-20">
+    <div className="min-h-screen bg-navy-dark text-white pt-10 sm:pt-14 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-body text-[10px] text-gray-500 tracking-widest uppercase mb-10">
-          <button onClick={() => navigate('/')} className="hover:text-electric transition-colors">Home</button>
-          <span>/</span>
-          <button onClick={() => navigate('/products')} className="hover:text-electric transition-colors">Collection</button>
-          <span>/</span>
-          <span className="text-gray-300">{product.name}</span>
+        <nav className="flex items-center flex-wrap gap-2 font-body text-[12px] sm:text-[13px] text-gray-400 tracking-wider uppercase mb-6 sm:mb-8 font-medium">
+          <button onClick={() => navigate('/')} className="hover:text-electric transition-colors font-semibold">Home</button>
+          <span className="text-gray-600 font-bold">/</span>
+          <button onClick={() => navigate('/products')} className="hover:text-electric transition-colors font-semibold">Collection</button>
+          <span className="text-gray-600 font-bold">/</span>
+          <span className="text-white font-semibold">{product.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
@@ -89,15 +116,19 @@ const ProductDetail: React.FC = () => {
                 <button
                   key={i}
                   onClick={() => setMainImageIndex(i)}
-                  className={`shrink-0 w-20 aspect-square bg-navy-mid border-2 rounded-xl transition-all overflow-hidden p-2 ${mainImageIndex === i ? 'border-electric shadow-glow-blue/20' : 'border-white/5 opacity-50 hover:opacity-80'}`}
+                  className={`shrink-0 w-20 aspect-square bg-navy-mid border-2 rounded-xl transition-all overflow-hidden ${mainImageIndex === i ? 'border-electric shadow-glow-blue/20' : 'border-white/5 opacity-50 hover:opacity-80'}`}
                 >
-                  <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-contain" />
+                  <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
 
-            {/* Main Image */}
-            <div className="flex-1 order-1 md:order-2 relative aspect-square bg-navy-mid rounded-3xl border border-white/5 overflow-hidden group">
+            {/* Main Image with Touch Swipe and Navigation Arrows */}
+            <div 
+              className="flex-1 order-1 md:order-2 relative aspect-[4/5] bg-navy-mid rounded-3xl border border-white/5 overflow-hidden group select-none"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               {discount > 0 && (
                 <div className="absolute top-6 right-6 bg-red-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg shadow-xl z-10 animate-pulse-glow">
                   SAVE {discount}%
@@ -106,8 +137,36 @@ const ProductDetail: React.FC = () => {
               <img 
                 src={product.images[mainImageIndex]} 
                 alt={product.name}
-                className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                draggable="false"
               />
+
+              {/* Navigation Arrows */}
+              {product.images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    type="button"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 hover:bg-black/60 flex items-center justify-center text-white transition-all active:scale-90 shadow-md z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                    aria-label="Previous image"
+                  >
+                    <svg className="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={handleNextImage}
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 hover:bg-black/60 flex items-center justify-center text-white transition-all active:scale-90 shadow-md z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                    aria-label="Next image"
+                  >
+                    <svg className="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
