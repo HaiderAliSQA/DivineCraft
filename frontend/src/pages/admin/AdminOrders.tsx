@@ -74,7 +74,7 @@ const AdminOrders: React.FC = () => {
   return (
     <div className="animate-fadeIn font-dm relative">
       {/* 1. FIXED PAGE HEADER */}
-      <div className="sticky top-0 z-30 bg-navy-dark pb-4 pt-4 px-6 border-b border-navy-light shadow-sm">
+      <div className="sticky top-0 z-30 bg-navy-dark pb-4 pt-4 px-0 border-b border-navy-light shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="font-heading text-white text-3xl font-bold">Storefront Orders</h1>
@@ -134,7 +134,7 @@ const AdminOrders: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-6 pb-12 pt-6 space-y-6">
+      <div className="px-0 pb-12 pt-6 space-y-6">
         {/* 2. SUMMARY KPI BAR */}
         {stats && (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

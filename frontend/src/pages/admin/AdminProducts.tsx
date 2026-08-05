@@ -74,7 +74,7 @@ const AdminProducts: React.FC = () => {
   return (
     <div className="animate-fadeIn font-dm relative">
       {/* 1. FIXED PAGE HEADER & TOOLBAR */}
-      <div className="sticky top-0 z-30 bg-navy-dark pb-4 pt-4 px-6 border-b border-navy-light shadow-sm">
+      <div className="sticky top-0 z-30 bg-navy-dark pb-4 pt-4 px-0 border-b border-navy-light shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="font-playfair text-white text-[32px] font-bold tracking-tight">Products Inventory</h1>
@@ -105,9 +105,8 @@ const AdminProducts: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-6 pb-12">
+      <div className="px-0 pb-12">
         <div className="bg-navy-mid border border-navy-light shadow-sm flex flex-col">
-
         {/* Table */}
         <div className="overflow-x-auto">
           {isLoading ? (
@@ -122,41 +121,41 @@ const AdminProducts: React.FC = () => {
             <table className="w-full text-left text-[14px] whitespace-nowrap border-separate border-spacing-0">
               <thead className="bg-navy-mid text-gray-400 uppercase tracking-[0.2em] text-[10px] font-bold border-b border-navy-light sticky top-[80px] z-20 shadow-xs">
                 <tr>
-                  <th className="px-4 py-5 w-12 text-center text-electric">#</th>
-                  <th className="px-4 py-5">Product Details</th>
-                  <th className="px-4 py-5 w-32">Unit Price</th>
-                  <th className="px-4 py-5 w-40">Inventory</th>
-                  <th className="px-4 py-5 w-28 text-center">Visibility</th>
-                  <th className="px-4 py-5 w-28 text-center">Featured</th>
-                  <th className="px-4 py-5 w-28 text-center">Discontinued</th>
-                  <th className="px-4 py-5 w-28 text-right">Actions</th>
+                  <th className="px-2 py-3.5 w-10 text-center text-electric">#</th>
+                  <th className="px-2 py-3.5">Product Details</th>
+                  <th className="px-2 py-3.5 w-28">Unit Price</th>
+                  <th className="px-2 py-3.5 w-32">Inventory</th>
+                  <th className="px-2 py-3.5 w-24 text-center">Visibility</th>
+                  <th className="px-2 py-3.5 w-24 text-center">Featured</th>
+                  <th className="px-2 py-3.5 w-24 text-center">Discontinued</th>
+                  <th className="px-2 py-3.5 w-24 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-navy-light">
                 {products.map((product, index) => (
                   <tr key={product._id} className={`hover:bg-navy-light/30 transition-colors group ${product.isDiscontinued ? 'opacity-40 grayscale-[0.5]' : ''}`}>
-                    <td className="px-4 py-6 text-center text-gray-400 font-bold text-[11px]">
+                    <td className="px-2 py-4 text-center text-gray-400 font-bold text-[11px]">
                       {(page - 1) * limit + index + 1}
                     </td>
-                    <td className="px-4 py-6">
-                      <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-navy-light p-1 border border-navy-light group-hover:border-gold/50 transition-colors shrink-0">
+                    <td className="px-2 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-12 h-12 bg-navy-light p-1 border border-navy-light group-hover:border-gold/50 transition-colors shrink-0">
                           {product.images[0] ? (
                             <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[8px] font-bold uppercase text-gray-400">NO IMAGE</div>
                           )}
                         </div>
-                        <div className="flex flex-col gap-1 min-w-0">
-                          <p className="text-white font-bold text-[14px] uppercase tracking-wide truncate max-w-xs sm:max-w-md lg:max-w-lg" title={product.name}>{product.name}</p>
-                          <p className="text-electric text-[10px] uppercase tracking-[0.2em] font-bold">{product.category.replace(/-/g, ' ')}</p>
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <p className="text-white font-bold text-[13px] uppercase tracking-wide truncate max-w-xs sm:max-w-md lg:max-w-lg" title={product.name}>{product.name}</p>
+                          <p className="text-electric text-[9px] uppercase tracking-[0.2em] font-bold">{product.category.replace(/-/g, ' ')}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-6 text-white font-bold font-playfair text-[18px] w-32">
+                    <td className="px-2 py-4 text-white font-bold font-playfair text-[16px] w-28">
                       {formatPrice(product.price)}
                     </td>
-                    <td className="px-4 py-6 w-40">
+                    <td className="px-2 py-4 w-32">
                       <div className="flex flex-col gap-1">
                         {editingStockId === product._id ? (
                           <div className="flex items-center gap-1">
@@ -170,15 +169,15 @@ const AdminProducts: React.FC = () => {
                                   if (e.key === 'Escape') setEditingStockId(null);
                                 }}
                               autoFocus
-                              className="w-20 border border-fm-gold px-2 py-1 text-[12px] text-white font-bold outline-none"
+                              className="w-16 border border-fm-gold px-1.5 py-0.5 text-[12px] text-white font-bold outline-none"
                             />
                             <button
                               onClick={() => handleStockSave(product._id)}
-                              className="text-[10px] bg-navy-light text-white px-2 py-1 font-bold"
+                              className="text-[10px] bg-navy-light text-white px-1.5 py-0.5 font-bold"
                             >✓</button>
                             <button
                               onClick={() => setEditingStockId(null)}
-                              className="text-[10px] border border-navy-light px-2 py-1 text-white-3 font-bold"
+                              className="text-[10px] border border-navy-light px-1.5 py-0.5 text-white-3 font-bold"
                             >✕</button>
                           </div>
                         ) : (
@@ -195,33 +194,33 @@ const AdminProducts: React.FC = () => {
                             <span className="block text-[9px] text-white-3 mt-0.5">click to edit</span>
                           </button>
                         )}
-                        <div className="w-24 h-1 bg-fm-border rounded-full overflow-hidden">
+                        <div className="w-20 h-1 bg-fm-border rounded-full overflow-hidden">
                           <div className={`h-full rounded-full ${product.stock > 10 ? 'bg-emerald-500' : product.stock > 0 ? 'bg-amber-400' : 'bg-red-500'}`} style={{ width: `${Math.min(product.stock, 100)}%` }}></div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-6 w-28 text-center">
-                      <button onClick={() => handleToggle(product._id, 'visibility')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isVisible ? 'bg-electric' : 'bg-navy-light'} mx-auto block`}>
-                        <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isVisible ? 'left-[26px]' : 'left-1'}`} />
+                    <td className="px-2 py-4 w-24 text-center">
+                      <button onClick={() => handleToggle(product._id, 'visibility')} className={`w-11 h-5 rounded-full relative transition-all duration-300 ${product.isVisible ? 'bg-electric' : 'bg-navy-light'} mx-auto block`}>
+                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isVisible ? 'left-[22px]' : 'left-0.5'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6 w-28 text-center">
-                      <button onClick={() => handleToggle(product._id, 'featured')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isFeatured ? 'bg-gold' : 'bg-navy-light'} mx-auto block`}>
-                        <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isFeatured ? 'left-[26px]' : 'left-1'}`} />
+                    <td className="px-2 py-4 w-24 text-center">
+                      <button onClick={() => handleToggle(product._id, 'featured')} className={`w-11 h-5 rounded-full relative transition-all duration-300 ${product.isFeatured ? 'bg-gold' : 'bg-navy-light'} mx-auto block`}>
+                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isFeatured ? 'left-[22px]' : 'left-0.5'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6 w-28 text-center">
-                      <button onClick={() => handleToggle(product._id, 'discontinued')} className={`w-12 h-6 rounded-full relative transition-all duration-300 ${product.isDiscontinued ? 'bg-fm-red' : 'bg-navy-light'} mx-auto block`}>
-                        <span className={`absolute top-1 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isDiscontinued ? 'left-[26px]' : 'left-1'}`} />
+                    <td className="px-2 py-4 w-24 text-center">
+                      <button onClick={() => handleToggle(product._id, 'discontinued')} className={`w-11 h-5 rounded-full relative transition-all duration-300 ${product.isDiscontinued ? 'bg-fm-red' : 'bg-navy-light'} mx-auto block`}>
+                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-navy-mid transition-all duration-300 shadow-sm ${product.isDiscontinued ? 'left-[22px]' : 'left-0.5'}`} />
                       </button>
                     </td>
-                    <td className="px-4 py-6 text-right w-28">
-                      <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link to={`/admin/products/edit/${product._id}`} className="bg-navy-mid p-2.5 border border-navy-light hover:border-gold hover:text-electric transition-all shadow-sm" title="Edit">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                    <td className="px-2 py-4 text-right w-24">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link to={`/admin/products/edit/${product._id}`} className="bg-navy-mid p-2 border border-navy-light hover:border-gold hover:text-electric transition-all shadow-sm" title="Edit">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                         </Link>
-                        <button onClick={() => handleDelete(product._id, product.name)} className="bg-navy-mid p-2.5 border border-navy-light hover:border-fm-red hover:text-fm-red transition-all shadow-sm" title="Delete">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        <button onClick={() => handleDelete(product._id, product.name)} className="bg-navy-mid p-2 border border-navy-light hover:border-fm-red hover:text-fm-red transition-all shadow-sm" title="Delete">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </button>
                       </div>
                     </td>

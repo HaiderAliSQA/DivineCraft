@@ -161,10 +161,8 @@ const AdminLayout: React.FC = () => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto h-[calc(100vh-80px)] bg-navy-dark p-6">
-          <div className="max-w-none">
-            <Outlet />
-          </div>
+        <main className="flex-1 overflow-y-auto h-[calc(100vh-80px)] bg-navy-dark py-0 px-2 lg:px-3">
+          <Outlet />
         </main>
       </div>
     </div>
