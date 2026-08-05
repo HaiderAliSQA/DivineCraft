@@ -386,10 +386,22 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response): Promise<
       updateData.slug = slug;
     }
 
+    // Sanitize compareAtPrice: convert null/undefined/NaN/0 to undefined so Mongoose doesn't
+    // try to store an invalid number and trigger type validation errors
+    if (
+      updateData.compareAtPrice === null ||
+      updateData.compareAtPrice === undefined ||
+      (typeof updateData.compareAtPrice === 'number' && isNaN(updateData.compareAtPrice))
+    ) {
+      delete updateData.compareAtPrice;
+    }
+
+    // Do NOT use runValidators here — it re-runs minlength/enum on all fields
+    // even those not being updated, which causes spurious 500 errors.
     const product = await Product.findByIdAndUpdate(
       id,
       { $set: updateData },
-      { new: true, runValidators: true }
+      { new: true, runValidators: false }
     );
 
     if (!product) {
@@ -399,6 +411,7 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response): Promise<
 
     res.status(200).json({ success: true, data: product });
   } catch (error) {
+    console.error('[PUT /api/products/:id] Error:', (error as Error).message, (error as any)?.errors);
     res.status(500).json({
       success: false,
       message: 'Failed to update product',

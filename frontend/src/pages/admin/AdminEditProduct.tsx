@@ -161,18 +161,27 @@ const AdminEditProduct: React.FC = () => {
   };
 
   const handleRemoveImage = async (url: string) => {
-    const parts = url.split('/');
-    const filename = parts.pop();
-    const publicId = filename?.split('.')[0] || '';
-    
+    // Remove from local state immediately so UI updates instantly
     setImages(prev => prev.filter(img => img !== url));
-    
-    if (publicId) {
-      try {
+
+    // Extract full Cloudinary publicId including folder path
+    // URL format: https://res.cloudinary.com/<cloud>/image/upload/v123/divinecraft/products/filename.webp
+    // We need: divinecraft/products/filename (without extension)
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname; // e.g. /dssemvx6x/image/upload/v.../divinecraft/products/abc.webp
+      // Split on '/upload/' to get everything after the version segment
+      const afterUpload = pathname.split('/upload/')[1] ?? '';
+      // Strip leading version segment (v123456789/)
+      const withoutVersion = afterUpload.replace(/^v\d+\//, '');
+      // Strip file extension
+      const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
+
+      if (publicId) {
         await deleteImage(publicId).unwrap();
-      } catch {
-        // ignore
       }
+    } catch {
+      // Silently ignore Cloudinary delete errors — image is already removed from UI
     }
   };
 

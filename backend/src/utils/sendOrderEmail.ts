@@ -36,7 +36,8 @@ export const generateOrderPDF = (order: OrderData): Promise<Buffer> => {
     try {
       const doc = new PDFDocument({
         size: 'A4',
-        margin: 50,
+        margin: 36,
+        autoFirstPage: true,
       });
 
       const buffers: Buffer[] = [];
@@ -48,256 +49,172 @@ export const generateOrderPDF = (order: OrderData): Promise<Buffer> => {
       const DARK = '#1A1714';
       const GRAY = '#5C5650';
       const LIGHT = '#F5F3EE';
-      const RED   = '#C41E3A';
 
-      const pageWidth = doc.page.width - 100;
+      const L = 36; // left margin
+      const pageWidth = doc.page.width - L * 2;
 
-      // ── HEADER ──
-      doc.rect(0, 0, doc.page.width, 100).fill(DARK);
-      doc
-        .fillColor('#FFFFFF')
-        .font('Helvetica-Bold')
-        .fontSize(22)
-        .text('DIVENECRAFT', 50, 28, { align: 'center', width: pageWidth });
-      doc
-        .fillColor(GOLD)
-        .font('Helvetica')
-        .fontSize(10)
-        .text('Unveiling the Soul of Handmade Artistry', 50, 56, {
-          align: 'center',
-          width: pageWidth,
-        });
-      doc
-        .fillColor('#FFFFFF')
-        .font('Helvetica')
-        .fontSize(9)
-        .text('Premium Handcrafted Artisan Goods Collection', 50, 74, { align: 'center', width: pageWidth });
+      // ── HEADER (compact) ──
+      doc.rect(0, 0, doc.page.width, 72).fill(DARK);
+      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(18)
+        .text('DIVENECRAFT', L, 14, { align: 'center', width: pageWidth });
+      doc.fillColor(GOLD).font('Helvetica').fontSize(8)
+        .text('Unveiling the Soul of Handmade Artistry', L, 36, { align: 'center', width: pageWidth });
+      doc.fillColor('#FFFFFF').font('Helvetica').fontSize(7)
+        .text('ORDER RECEIPT', L, 52, { align: 'center', width: pageWidth });
 
-      doc.moveDown(3);
-
-      // ── ORDER RECEIPT TITLE ──
-      doc
-        .fillColor(DARK)
-        .font('Helvetica-Bold')
-        .fontSize(16)
-        .text('ORDER RECEIPT', 50, 120, { align: 'center', width: pageWidth });
-
-      // Gold underline
-      const titleWidth = 140;
-      doc
-        .moveTo((doc.page.width - titleWidth) / 2, 140)
-        .lineTo((doc.page.width - titleWidth) / 2 + titleWidth, 140)
-        .strokeColor(GOLD)
-        .lineWidth(2)
-        .stroke();
+      let y = 82;
 
       // ── ORDER INFO BOX ──
-      const boxY = 160;
-      doc
-        .rect(50, boxY, pageWidth, 80)
-        .fill(LIGHT);
-
       const orderDate = new Date(order.createdAt);
-      const dateStr = orderDate.toLocaleDateString('en-PK', {
-        day: '2-digit', month: 'long', year: 'numeric',
-      });
-      const timeStr = orderDate.toLocaleTimeString('en-PK', {
-        hour: '2-digit', minute: '2-digit',
-      });
+      const dateStr = orderDate.toLocaleDateString('en-PK', { day: '2-digit', month: 'long', year: 'numeric' });
+      const timeStr = orderDate.toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' });
 
-      // Left column
-      doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-        .text('Order Number:', 65, boxY + 12);
-      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(9)
-        .text(order.orderNumber, 65, boxY + 24);
-
-      doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-        .text('Date:', 65, boxY + 42);
-      doc.fillColor(DARK).font('Helvetica').fontSize(9)
-        .text(`${dateStr} at ${timeStr}`, 65, boxY + 54);
-
-      // Right column
-      doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-        .text('Payment Method:', 310, boxY + 12);
-      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(9)
-        .text(order.paymentMethod.toUpperCase().replace('_', ' '), 310, boxY + 24);
-
-      doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-        .text('Payment Status:', 310, boxY + 42);
+      doc.rect(L, y, pageWidth, 52).fill(LIGHT);
+      // Left col
+      doc.fillColor(GRAY).font('Helvetica').fontSize(8).text('Order Number:', L + 8, y + 8);
+      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(8).text(order.orderNumber, L + 8, y + 18);
+      doc.fillColor(GRAY).font('Helvetica').fontSize(8).text('Date:', L + 8, y + 32);
+      doc.fillColor(DARK).font('Helvetica').fontSize(8).text(`${dateStr} at ${timeStr}`, L + 8, y + 42);
+      // Right col
+      const rxCol = L + pageWidth / 2;
+      doc.fillColor(GRAY).font('Helvetica').fontSize(8).text('Payment:', rxCol, y + 8);
+      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(8)
+        .text(order.paymentMethod.toUpperCase().replace('_', ' '), rxCol, y + 18);
+      doc.fillColor(GRAY).font('Helvetica').fontSize(8).text('Status:', rxCol, y + 32);
       const statusColor = order.paymentStatus === 'paid' ? '#2D6A4F' : '#854D0E';
-      doc.fillColor(statusColor).font('Helvetica-Bold').fontSize(9)
-        .text(order.paymentStatus.toUpperCase(), 310, boxY + 54);
+      doc.fillColor(statusColor).font('Helvetica-Bold').fontSize(8)
+        .text(order.paymentStatus.toUpperCase(), rxCol, y + 42);
+
+      y += 60;
+
+      // ── SECTION HEADER helper ──
+      const sectionHeader = (title: string) => {
+        doc.fillColor(DARK).font('Helvetica-Bold').fontSize(9).text(title, L, y);
+        doc.moveTo(L, y + 12).lineTo(L + pageWidth, y + 12)
+          .strokeColor(GOLD).lineWidth(0.8).stroke();
+        y += 18;
+      };
 
       // ── CUSTOMER DETAILS ──
-      const custY = boxY + 100;
-      doc
-        .fillColor(DARK)
-        .font('Helvetica-Bold')
-        .fontSize(11)
-        .text('CUSTOMER DETAILS', 50, custY);
-      doc
-        .moveTo(50, custY + 16)
-        .lineTo(50 + pageWidth, custY + 16)
-        .strokeColor(GOLD)
-        .lineWidth(1)
-        .stroke();
-
-      const custData = [
+      sectionHeader('CUSTOMER DETAILS');
+      const custData: [string, string][] = [
         ['Name',    order.customerName],
         ['Phone',   order.customerPhone],
         ['Email',   order.customerEmail || 'Not provided'],
         ['City',    order.customerCity],
         ['Address', order.customerAddress],
       ];
+      if (order.notes) custData.push(['Notes', order.notes]);
 
-      let custRowY = custY + 24;
       custData.forEach(([label, value]) => {
-        doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-          .text(`${label}:`, 50, custRowY, { width: 80 });
-        doc.fillColor(DARK).font('Helvetica').fontSize(9)
-          .text(value, 140, custRowY, { width: pageWidth - 90 });
-        custRowY += 18;
+        doc.fillColor(GRAY).font('Helvetica').fontSize(8).text(`${label}:`, L, y, { width: 60 });
+        doc.fillColor(DARK).font('Helvetica').fontSize(8).text(value, L + 64, y, { width: pageWidth - 64 });
+        // Measure rendered height to advance y correctly for multi-line values
+        const h = doc.heightOfString(value, { width: pageWidth - 64 });
+        y += Math.max(14, h + 2);
       });
 
+      y += 6;
+
       // ── ORDER ITEMS TABLE ──
-      const tableY = custRowY + 20;
-      doc
-        .fillColor(DARK)
-        .font('Helvetica-Bold')
-        .fontSize(11)
-        .text('ORDER ITEMS', 50, tableY);
-      doc
-        .moveTo(50, tableY + 16)
-        .lineTo(50 + pageWidth, tableY + 16)
-        .strokeColor(GOLD)
-        .lineWidth(1)
-        .stroke();
+      sectionHeader('ORDER ITEMS');
 
       // Table header
-      const headerY = tableY + 24;
-      doc.rect(50, headerY, pageWidth, 22).fill(DARK);
+      const cols = { product: L + 2, color: L + 240, qty: L + 298, price: L + 340, total: L + 408 };
+      doc.rect(L, y, pageWidth, 18).fill(DARK);
+      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(7);
+      doc.text('PRODUCT',  cols.product, y + 5);
+      doc.text('COLOR',    cols.color,   y + 5);
+      doc.text('QTY',      cols.qty,     y + 5);
+      doc.text('PRICE',    cols.price,   y + 5);
+      doc.text('TOTAL',    cols.total,   y + 5);
+      y += 18;
 
-      const cols = { product: 50, size: 240, color: 300, qty: 360, price: 410, total: 465 };
-      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(8);
-      doc.text('PRODUCT', cols.product + 4, headerY + 7);
-      doc.text('COLOR',   cols.color,        headerY + 7);
-      doc.text('QTY',     cols.qty,          headerY + 7);
-      doc.text('PRICE',   cols.price,        headerY + 7);
-      doc.text('TOTAL',   cols.total,        headerY + 7);
-
-      // Table rows
-      let rowY = headerY + 22;
       order.items.forEach((item, index) => {
         const rowBg = index % 2 === 0 ? '#FFFFFF' : LIGHT;
-        doc.rect(50, rowY, pageWidth, 22).fill(rowBg);
-
+        doc.rect(L, y, pageWidth, 16).fill(rowBg);
         const itemTotal = item.price * item.quantity;
-        doc.fillColor(DARK).font('Helvetica').fontSize(8);
-        doc.text(item.name.substring(0, 35), cols.product + 4, rowY + 7);
-        doc.text(item.color || 'N/A',         cols.color,       rowY + 7);
-        doc.text(item.quantity.toString(),    cols.qty,         rowY + 7);
-        doc.text(`PKR ${item.price.toLocaleString()}`, cols.price, rowY + 7);
-        doc.text(`PKR ${itemTotal.toLocaleString()}`, cols.total, rowY + 7);
-
-        rowY += 22;
+        doc.fillColor(DARK).font('Helvetica').fontSize(7);
+        doc.text(item.name.substring(0, 38), cols.product, y + 4);
+        doc.text(item.color || 'N/A',                      cols.color,   y + 4);
+        doc.text(item.quantity.toString(),                  cols.qty,     y + 4);
+        doc.text(`PKR ${item.price.toLocaleString()}`,     cols.price,   y + 4);
+        doc.text(`PKR ${itemTotal.toLocaleString()}`,      cols.total,   y + 4);
+        y += 16;
       });
 
       // Table border
-      doc
-        .rect(50, headerY, pageWidth, rowY - headerY)
-        .strokeColor('#E8E4DC')
-        .lineWidth(0.5)
-        .stroke();
+      doc.rect(L, y - (order.items.length * 16) - 18, pageWidth, order.items.length * 16 + 18)
+        .strokeColor('#E8E4DC').lineWidth(0.4).stroke();
+
+      y += 4;
 
       // ── PRICE SUMMARY ──
-      const summaryY = rowY + 16;
-      const summaryX = 360;
-      const summaryW = pageWidth - summaryX + 50;
-
-      const priceRows = [
-        ['Subtotal:',         `PKR ${order.subtotal.toLocaleString()}`],
-        ['TCS Delivery:',     order.deliveryCharges === 0 ? 'FREE' : `PKR ${order.deliveryCharges.toLocaleString()}`],
+      const sumX = L + pageWidth - 200;
+      const sumW = 200;
+      const priceRows: [string, string][] = [
+        ['Subtotal:', `PKR ${order.subtotal.toLocaleString()}`],
+        ['TCS Delivery:', order.deliveryCharges === 0 ? 'FREE' : `PKR ${order.deliveryCharges.toLocaleString()}`],
       ];
-
-      let prY = summaryY;
       priceRows.forEach(([label, value]) => {
-        doc.fillColor(GRAY).font('Helvetica').fontSize(9)
-          .text(label, summaryX, prY, { width: 90 });
-        doc.fillColor(DARK).font('Helvetica').fontSize(9)
-          .text(value, summaryX + 95, prY, { align: 'right', width: summaryW - 95 });
-        prY += 18;
+        doc.fillColor(GRAY).font('Helvetica').fontSize(8).text(label, sumX, y, { width: 100 });
+        doc.fillColor(DARK).font('Helvetica').fontSize(8)
+          .text(value, sumX + 100, y, { align: 'right', width: 96 });
+        y += 14;
       });
-
-      // Total row
-      doc.rect(summaryX, prY, summaryW, 24).fill(DARK);
-      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(10)
-        .text('TOTAL:', summaryX + 6, prY + 7);
-      doc.fillColor(GOLD).font('Helvetica-Bold').fontSize(10)
-        .text(`PKR ${order.totalAmount.toLocaleString()}`, summaryX + 6, prY + 7, {
-          align: 'right', width: summaryW - 12,
-        });
+      doc.rect(sumX, y, sumW, 20).fill(DARK);
+      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(9).text('TOTAL:', sumX + 4, y + 5);
+      doc.fillColor(GOLD).font('Helvetica-Bold').fontSize(9)
+        .text(`PKR ${order.totalAmount.toLocaleString()}`, sumX + 4, y + 5, { align: 'right', width: sumW - 8 });
+      y += 24;
 
       // ── PAYMENT INSTRUCTIONS ──
-      const payY = prY + 44;
-      doc
-        .fillColor(DARK)
-        .font('Helvetica-Bold')
-        .fontSize(11)
-        .text('PAYMENT INSTRUCTIONS', 50, payY);
-      doc
-        .moveTo(50, payY + 16)
-        .lineTo(50 + pageWidth, payY + 16)
-        .strokeColor(GOLD)
-        .lineWidth(1)
-        .stroke();
+      y += 6;
+      sectionHeader('PAYMENT INSTRUCTIONS');
 
-      const payBoxY = payY + 24;
-      doc.rect(50, payBoxY, pageWidth, 70).fill(LIGHT);
-      doc.rect(50, payBoxY, pageWidth, 70).strokeColor('#E8E4DC').lineWidth(0.5).stroke();
-
-      let payText = '';
       const method = order.paymentMethod.toLowerCase();
-
+      let payLines: string[] = [];
       if (method === 'cod') {
-        payText = `Please keep PKR ${order.totalAmount.toLocaleString()} ready in cash for payment on delivery.\nOur TCS courier will deliver within 2 business days.`;
+        payLines = [
+          `Please keep PKR ${order.totalAmount.toLocaleString()} ready in cash for payment on delivery.`,
+          'Our TCS courier will deliver within 2 business days.',
+        ];
       } else if (method === 'jazzcash') {
-        payText = `JazzCash Number: +92 300 7709173\nAccount Title: Rimsha Ali\nAmount: PKR ${order.totalAmount.toLocaleString()}\n${order.transactionId ? `Transaction ID: ${order.transactionId}` : 'Please send payment and reply with your Transaction ID on WhatsApp.'}`;
+        payLines = [
+          'JazzCash Number: +92 300 7709173 (Rimsha Ali)',
+          `Amount: PKR ${order.totalAmount.toLocaleString()}`,
+          order.transactionId ? `Transaction ID: ${order.transactionId}` : 'Please send payment and share Transaction ID on WhatsApp.',
+        ];
       } else if (method === 'easypaisa') {
-        payText = `Easypaisa Number: +92 300 7709173\nAccount Title: Rimsha Ali\nAmount: PKR ${order.totalAmount.toLocaleString()}\n${order.transactionId ? `Transaction ID: ${order.transactionId}` : 'Please send payment and reply with your Transaction ID on WhatsApp.'}`;
+        payLines = [
+          'Easypaisa Number: +92 300 7709173 (Rimsha Ali)',
+          `Amount: PKR ${order.totalAmount.toLocaleString()}`,
+          order.transactionId ? `Transaction ID: ${order.transactionId}` : 'Please send payment and share Transaction ID on WhatsApp.',
+        ];
       } else if (method === 'bank_transfer') {
-        payText = `Bank: Meezan Bank\nAccount Number: 48010112475304\nAccount Title: DiveneCraft\nAmount: PKR ${order.totalAmount.toLocaleString()}\n${order.transactionId ? `Reference ID: ${order.transactionId}` : 'Please transfer and reply with your Transaction Reference on WhatsApp.'}`;
+        payLines = [
+          'Bank: Meezan Bank | Account: 48010112475304 | Title: DiveneCraft',
+          `Amount: PKR ${order.totalAmount.toLocaleString()}`,
+          order.transactionId ? `Reference ID: ${order.transactionId}` : 'Please transfer and share Reference on WhatsApp.',
+        ];
       }
 
-      doc.fillColor(DARK).font('Helvetica').fontSize(9)
-        .text(payText, 65, payBoxY + 10, { width: pageWidth - 30, lineGap: 4 });
+      doc.rect(L, y, pageWidth, payLines.length * 14 + 12).fill(LIGHT)
+        .strokeColor('#E8E4DC').lineWidth(0.4).stroke();
+      payLines.forEach((line, i) => {
+        doc.fillColor(DARK).font('Helvetica').fontSize(8)
+          .text(line, L + 8, y + 6 + i * 14, { width: pageWidth - 16 });
+      });
+      y += payLines.length * 14 + 16;
 
-      // ── FOOTER ──
-      const footerY = doc.page.height - 80;
-      doc
-        .moveTo(50, footerY)
-        .lineTo(50 + pageWidth, footerY)
-        .strokeColor('#E8E4DC')
-        .lineWidth(0.5)
-        .stroke();
-
-      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(9)
-        .text('Thank you for shopping with DiveneCraft!', 50, footerY + 10, {
-          align: 'center', width: pageWidth,
-        });
-      doc.fillColor(GRAY).font('Helvetica').fontSize(8)
-        .text('For queries: WhatsApp +92 300 770 9173 | Return Policy: 7-day exchange on unused items', 50, footerY + 26, {
-          align: 'center', width: pageWidth,
-        });
+      // ── FOOTER (immediately after content) ──
+      doc.moveTo(L, y).lineTo(L + pageWidth, y).strokeColor('#E8E4DC').lineWidth(0.4).stroke();
+      y += 6;
+      doc.fillColor(DARK).font('Helvetica-Bold').fontSize(8)
+        .text('Thank you for shopping with DiveneCraft!', L, y, { align: 'center', width: pageWidth });
+      y += 12;
       doc.fillColor(GRAY).font('Helvetica').fontSize(7)
-        .text('DiveneCraft — Handcrafted Artisan Goods — Pakistan', 50, footerY + 42, {
-          align: 'center', width: pageWidth,
-        });
-
-      // Page number
-      doc.fillColor(GRAY).font('Helvetica').fontSize(7)
-        .text('Page 1 of 1', 50, footerY + 56, {
-          align: 'right', width: pageWidth,
-        });
+        .text('WhatsApp: +92 300 770 9173  |  7-day exchange on unused items', L, y, { align: 'center', width: pageWidth });
 
       doc.end();
     } catch (error) {

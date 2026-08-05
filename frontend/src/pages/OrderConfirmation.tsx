@@ -137,59 +137,134 @@ const OrderConfirmation: React.FC = () => {
           to { stroke-dashoffset: 0; }
         }
         @media print {
-          /* Hide all non-essential web and interactive features */
-          nav, header, footer, .no-print, [class*="Navbar"], [class*="Footer"], [class*="PromoBar"], [class*="WhatsAppWidget"], [class*="whatsApp"], [class*="whatsapp"] {
+          /* ── Hide all interactive/nav elements ── */
+          nav, header, footer, .no-print,
+          [class*="Navbar"], [class*="Footer"], [class*="PromoBar"],
+          [class*="WhatsAppWidget"], [class*="whatsApp"], [class*="whatsapp"] {
             display: none !important;
           }
-          
-          /* Full Page Reset for standard paper print */
+
+          /* ── Page setup: let content define the size ── */
+          @page {
+            margin: 8mm 10mm;
+            size: A4 portrait;
+          }
+
+          /* ── Reset everything ── */
+          *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+            box-shadow: none !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+
           html, body {
             background: #ffffff !important;
             color: #000000 !important;
-            font-size: 11px !important;
+            font-size: 10px !important;
             margin: 0 !important;
             padding: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            overflow: visible !important;
           }
-          
-          /* Compress overall outer container spacing */
+
+          /* ── Outer wrappers: strip ALL spacing ── */
           .min-h-screen {
             min-height: 0 !important;
-            padding: 10px !important;
+            height: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
             background: #ffffff !important;
           }
-          
+
           .max-w-4xl {
             max-width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
           }
-          
-          .space-y-4 > * + * {
-            margin-top: 8px !important;
+
+          /* ── Collapse ALL vertical gaps between sections ── */
+          .space-y-6 > * + *,
+          .space-y-4 > * + *,
+          .space-y-3 > * + *,
+          .gap-6, .gap-4 {
+            margin-top: 4px !important;
+            gap: 4px !important;
           }
-          
-          /* Elegant Ink-Saving Cards & Borders */
-          .bg-artisan-card {
+
+          /* ── Cards: minimal padding, no shadow, auto height ── */
+          [class*="rounded-2xl"],
+          [class*="rounded-xl"],
+          [class*="bg-white"] {
             background: #ffffff !important;
-            color: #000000 !important;
-            border: 1px solid #e2e8f0 !important;
-            padding: 12px !important;
+            border: 1px solid #d1d5db !important;
             box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 8px 10px !important;
+            margin-bottom: 4px !important;
+            height: auto !important;
+            min-height: 0 !important;
+            page-break-inside: avoid !important;
           }
-          
-          .bg-artisan-bg {
-            background: #f8fafc !important;
-            border: 1px solid #e2e8f0 !important;
+
+          /* ── Grid: always single column in print ── */
+          .grid {
+            display: block !important;
           }
-          
+          .grid > * {
+            margin-bottom: 4px !important;
+            width: 100% !important;
+          }
+
+          /* ── Flex containers: stack vertically ── */
+          .flex-col, .flex {
+            flex-wrap: wrap !important;
+          }
+
+          /* ── Text: shrink all text for compact fit ── */
+          p, span, td, th, li {
+            font-size: 9px !important;
+            line-height: 1.3 !important;
+            margin: 0 !important;
+          }
+          h1 { font-size: 16px !important; margin: 0 0 2px !important; }
+          h2 { font-size: 12px !important; margin: 0 0 2px !important; }
+          h3 { font-size: 10px !important; margin: 0 0 2px !important; }
+          h4 { font-size: 9px !important; margin: 0 !important; }
+
+          /* ── Images in product list: smaller ── */
+          img {
+            max-width: 36px !important;
+            max-height: 36px !important;
+          }
+
+          /* ── Divide lines: tighten ── */
+          .divide-y > * + * {
+            border-top: 1px solid #e5e7eb !important;
+          }
+
+          /* ── Artisan-specific overrides ── */
+          .bg-\[#FAF8F5\] {
+            background: #f9f9f9 !important;
+          }
           .border-artisan-subtle\/10 {
-            border-color: #e2e8f0 !important;
+            border-color: #e5e7eb !important;
           }
-          
           .divide-artisan-subtle\/10 > * + * {
-            border-color: #e2e8f0 !important;
+            border-color: #e5e7eb !important;
+          }
+
+          /* ── Animated gradient text: fallback for print ── */
+          .animated-gradient-text {
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: #3D1F0D !important;
+            color: #3D1F0D !important;
           }
         }
+
 
         @keyframes pulseBreathing {
           0%, 100% {
