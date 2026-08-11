@@ -191,8 +191,31 @@ productSchema.pre<IProduct>('save', async function (next) {
 productSchema.index({ category: 1 });
 productSchema.index({ isFeatured: 1 });
 productSchema.index({ isNewArrival: 1 });
-productSchema.index({ isVisible: 1, isDiscontinued: 1 });
+// Compound index that matches every public GET query (filter + sort in one index)
+productSchema.index({ isVisible: 1, isDiscontinued: 1, createdAt: -1 });
+productSchema.index({ isVisible: 1, isDiscontinued: 1, price: 1 });
+productSchema.index({ isVisible: 1, isDiscontinued: 1, price: -1 });
+productSchema.index({ isVisible: 1, isDiscontinued: 1, category: 1, createdAt: -1 });
 productSchema.index({ name: 'text', brand: 'text', compatibleModels: 'text', tags: 'text' });
+
+/**
+ * Projection for public-facing product list endpoints.
+ * Only returns the fields the frontend actually renders in ProductCard.
+ * Reduces network payload and MongoDB memory usage significantly.
+ */
+export const PUBLIC_PRODUCT_PROJECTION = {
+  name: 1,
+  slug: 1,
+  price: 1,
+  compareAtPrice: 1,
+  category: 1,
+  images: { $slice: 1 }, // Only the first image for list views
+  stock: 1,
+  colors: 1,
+  isFeatured: 1,
+  isNewArrival: 1,
+  createdAt: 1,
+} as const;
 
 const Product: Model<IProduct> = mongoose.model<IProduct>(
   'Product',

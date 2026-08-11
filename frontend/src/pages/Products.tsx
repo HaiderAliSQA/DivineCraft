@@ -59,13 +59,6 @@ const Products: React.FC = () => {
   const newArrival = searchParams.get('newArrival') || '';
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Fetch the absolute highest priced product in the database for the max price range limit
-  const { data: maxPriceData } = useGetProductsQuery({
-    sortBy: '-price',
-    limit: 1
-  });
-  const maxLimit = maxPriceData?.data?.products?.[0]?.price || 37500;
-
   const { data, isLoading } = useGetProductsQuery({
     category,
     minPrice: minPrice || undefined,
@@ -81,6 +74,9 @@ const Products: React.FC = () => {
   const revealRef = useScrollReveal(0.1);
   const totalPages = data?.data?.pages || 1;
   const totalItems = data?.data?.total || 0;
+
+  // Static max price for the price range slider — avoids a redundant extra API call on page load.
+  const maxLimit = 37500;
 
   const minVal = minPrice ? parseInt(minPrice, 10) : 0;
   const maxVal = maxPrice ? parseInt(maxPrice, 10) : maxLimit;

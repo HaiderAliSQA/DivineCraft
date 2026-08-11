@@ -1,9 +1,10 @@
 // backend/src/routes/products.ts
 import { Router, Request, Response } from 'express';
 import slugify from 'slugify';
-import Product, { IProduct } from '../models/Product';
+import Product, { IProduct, PUBLIC_PRODUCT_PROJECTION } from '../models/Product';
 import authMiddleware from '../middleware/authMiddleware';
 import { cloudinary } from '../config/cloudinary';
+import { getCached, setCache, invalidateProductCache } from '../utils/productCache';
 
 const router = Router();
 
@@ -103,14 +104,36 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     };
     const sortQuery = sortMap[sortBy] ?? sortMap['newest']!;
 
+    // ── In-memory cache check ─────────────────────────────────────────────
+    // Build a deterministic cache key from every query parameter so that
+    // different filter combinations each get their own cache entry.
+    const cacheKey = `products:${JSON.stringify(req.query)}`;
+    const cached = getCached(cacheKey);
+
+    if (cached) {
+      res.set({
+        'Cache-Control': 'public, max-age=30, stale-while-revalidate=300',
+        'Vary': 'Accept-Encoding',
+        'X-Cache': 'HIT',
+      });
+      res.status(200).json(cached);
+      return;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     const [products, total] = await Promise.all([
-      Product.find(filter).sort(sortQuery).skip(skip).limit(limitNum).lean(),
+      Product.find(filter)
+        .select(PUBLIC_PRODUCT_PROJECTION)
+        .sort(sortQuery)
+        .skip(skip)
+        .limit(limitNum)
+        .lean(),
       Product.countDocuments(filter),
     ]);
 
     const pages = Math.ceil(total / limitNum);
 
-    res.status(200).json({
+    const responseBody = {
       success: true,
       data: {
         products,
@@ -119,7 +142,17 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
         currentPage: pageNum,
         limit: limitNum,
       },
+    };
+
+    // Store in memory cache for 60 seconds
+    setCache(cacheKey, responseBody);
+
+    res.set({
+      'Cache-Control': 'public, max-age=30, stale-while-revalidate=300',
+      'Vary': 'Accept-Encoding',
+      'X-Cache': 'MISS',
     });
+    res.status(200).json(responseBody);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -132,15 +165,28 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 // GET /api/products/featured - PUBLIC
 router.get('/featured', async (_req: Request, res: Response): Promise<void> => {
   try {
+    const cacheKey = 'products:featured';
+    const cached = getCached(cacheKey);
+    if (cached) {
+      res.set({ 'Cache-Control': 'public, max-age=60, stale-while-revalidate=600', 'X-Cache': 'HIT' });
+      res.status(200).json(cached);
+      return;
+    }
+
     const products = await Product.find({
       ...publicQuery,
       isFeatured: true,
     })
+      .select(PUBLIC_PRODUCT_PROJECTION)
       .sort({ createdAt: -1 })
       .limit(8)
       .lean();
 
-    res.status(200).json({ success: true, data: products });
+    const responseBody = { success: true, data: products };
+    setCache(cacheKey, responseBody);
+
+    res.set({ 'Cache-Control': 'public, max-age=60, stale-while-revalidate=600', 'X-Cache': 'MISS' });
+    res.status(200).json(responseBody);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -153,15 +199,28 @@ router.get('/featured', async (_req: Request, res: Response): Promise<void> => {
 // GET /api/products/new-arrivals - PUBLIC
 router.get('/new-arrivals', async (_req: Request, res: Response): Promise<void> => {
   try {
+    const cacheKey = 'products:new-arrivals';
+    const cached = getCached(cacheKey);
+    if (cached) {
+      res.set({ 'Cache-Control': 'public, max-age=60, stale-while-revalidate=600', 'X-Cache': 'HIT' });
+      res.status(200).json(cached);
+      return;
+    }
+
     const products = await Product.find({
       ...publicQuery,
       isNewArrival: true,
     })
+      .select(PUBLIC_PRODUCT_PROJECTION)
       .sort({ createdAt: -1 })
       .limit(8)
       .lean();
 
-    res.status(200).json({ success: true, data: products });
+    const responseBody = { success: true, data: products };
+    setCache(cacheKey, responseBody);
+
+    res.set({ 'Cache-Control': 'public, max-age=60, stale-while-revalidate=600', 'X-Cache': 'MISS' });
+    res.status(200).json(responseBody);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -354,6 +413,9 @@ router.post('/', authMiddleware, async (req: Request, res: Response): Promise<vo
 
     await product.save();
 
+    // Flush cache so the new product appears immediately on the storefront
+    invalidateProductCache();
+
     res.status(201).json({
       success: true,
       data: product,
@@ -408,6 +470,9 @@ router.put('/:id', authMiddleware, async (req: Request, res: Response): Promise<
       res.status(404).json({ success: false, message: 'Product not found' });
       return;
     }
+
+    // Flush cache so updated details appear immediately on the storefront
+    invalidateProductCache();
 
     res.status(200).json({ success: true, data: product });
   } catch (error) {
@@ -622,6 +687,9 @@ router.delete('/:id', authMiddleware, async (req: Request, res: Response): Promi
 
     await Promise.allSettled(deletePromises);
     await Product.findByIdAndDelete(id);
+
+    // Flush cache so the deleted product disappears immediately from the storefront
+    invalidateProductCache();
 
     res.status(200).json({ success: true, message: 'Product deleted' });
   } catch (error) {

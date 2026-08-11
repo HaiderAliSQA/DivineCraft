@@ -5,6 +5,7 @@ import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import compression from 'compression';
 import connectDB from './config/db';
 import configureCloudinary from './config/cloudinary';
 import { verifyEmailConnection } from './config/email';
@@ -30,6 +31,13 @@ const app = express();
 app.set('trust proxy', 1);
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+
+// Compress all responses with gzip/brotli — reduces JSON payload by 70-80%.
+// Must be placed BEFORE other middleware so it compresses all responses.
+app.use(compression({
+  level: 6,      // zlib compression level: 1 (fastest) to 9 (smallest). 6 is the ideal balance.
+  threshold: 512, // Only compress responses larger than 512 bytes.
+}));
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },

@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useGetProductsQuery, useGetNewArrivalsQuery } from './store/api/productsApi';
 
 // Layouts
 import Layout from './components/layout/Layout';
@@ -60,9 +61,30 @@ const ScrollToTop = () => {
   return null;
 };
 
+/**
+ * Fires RTK Query prefetch requests the instant the app mounts.
+ * By the time the user sees the hero banner and scrolls down,
+ * the 12 default products are already fetched and cached in Redux.
+ * This component renders nothing — it only triggers side effects.
+ */
+const PrefetchOnMount: React.FC = () => {
+  // Calling these hooks with skip:true on a delay=0 schedule means they
+  // pre-populate the RTK cache immediately without blocking the render.
+  // We use the actual query hooks so the data goes into the exact same
+  // cache slot that Home.tsx and Products.tsx will read from.
+  useGetProductsQuery({ limit: 12, page: 1 }, {
+    // Data is fresh for 5 minutes (set globally) — no refetch on mount
+    // if already cached. This call just primes the cache on first load.
+  });
+  useGetNewArrivalsQuery();
+
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <Router>
+      <PrefetchOnMount />
       <ScrollToTop />
       <Toaster 
         position="top-center"

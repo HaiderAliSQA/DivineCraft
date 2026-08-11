@@ -18,6 +18,9 @@ export const productsApi = createApi({
     },
   }),
   tagTypes: ['Product'],
+  // Cache unused query results for 5 minutes. This means switching categories
+  // or navigating between pages will instantly show cached data.
+  keepUnusedDataFor: 300,
   endpoints: (builder) => ({
     getProducts: builder.query<
       ProductsResponse,
@@ -39,11 +42,15 @@ export const productsApi = createApi({
         url: '/products',
         params,
       }),
+      // Do not re-fetch if the cached data is less than 5 minutes old.
+      // This prevents extra network requests on component remount.
+      keepUnusedDataFor: 300,
       providesTags: ['Product'],
     }),
 
     getFeaturedProducts: builder.query<ApiResponse<Product[]>, void>({
       query: () => '/products/featured',
+      keepUnusedDataFor: 300,
       providesTags: ['Product'],
     }),
 

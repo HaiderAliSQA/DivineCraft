@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { CATEGORY_LABELS } from '../../types';
+import { useAppDispatch } from '../../store/store';
+import { productsApi } from '../../store/api/productsApi';
 
 const Navbar: React.FC = () => {
   const { count, toggleCart } = useCart();
@@ -10,7 +12,8 @@ const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
-  
+
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -43,6 +46,29 @@ const Navbar: React.FC = () => {
       navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery('');
+    }
+  };
+
+  /**
+   * Fires a silent RTK Query prefetch when the user hovers a nav link.
+   * The 100–300ms hover delay before clicking is enough for the data to
+   * arrive, so the target page renders with no loading skeleton at all.
+   */
+  const handleNavHover = (link: { name: string; path: string }) => {
+    // Only prefetch product-related links
+    if (!link.path.startsWith('/products')) return;
+
+    if (link.name === 'New Arrivals') {
+      dispatch(productsApi.util.prefetch('getProducts', { newArrival: 'true', limit: 12, page: 1 }, { force: false }));
+    } else if (link.path.includes('category=')) {
+      const cat = new URLSearchParams(link.path.split('?')[1]).get('category') ?? '';
+      dispatch(productsApi.util.prefetch('getProducts', { category: cat, limit: 12, page: 1 }, { force: false }));
+    } else if (link.path.includes('q=')) {
+      const q = new URLSearchParams(link.path.split('?')[1]).get('q') ?? '';
+      dispatch(productsApi.util.prefetch('getProducts', { search: q, limit: 12, page: 1 }, { force: false }));
+    } else {
+      // Default products page
+      dispatch(productsApi.util.prefetch('getProducts', { limit: 12, page: 1 }, { force: false }));
     }
   };
 
@@ -106,7 +132,10 @@ const Navbar: React.FC = () => {
                 <div 
                   key={link.name} 
                   className="relative py-5"
-                  onMouseEnter={() => isShopByCategory && setCategoryMenuOpen(true)}
+                  onMouseEnter={() => {
+                    if (isShopByCategory) setCategoryMenuOpen(true);
+                    handleNavHover(link);
+                  }}
                   onMouseLeave={() => isShopByCategory && setCategoryMenuOpen(false)}
                 >
                   <Link

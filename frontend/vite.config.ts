@@ -28,15 +28,24 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       sourcemap: false,
+      // Report compressed sizes in the build output
+      reportCompressedSize: true,
+      // Warn when a chunk exceeds 600 KB
+      chunkSizeWarningLimit: 600,
       rollupOptions: {
         output: {
           manualChunks: {
+            // Core React runtime — cached aggressively by CDN
             vendor: ['react', 'react-dom', 'react-router-dom'],
+            // State management — changes less often than app code
             redux: ['@reduxjs/toolkit', 'react-redux'],
+            // UI utilities — separate so they don't bloat the main bundle
+            ui: ['react-hot-toast'],
           },
         },
       },
+      // Use esbuild for faster, smaller minification
+      minify: 'esbuild',
     },
   };
 });
-

@@ -10,6 +10,20 @@ interface ProductCardProps {
   index?: number;
 }
 
+/**
+ * Transforms a Cloudinary image URL to apply automatic format (WebP/AVIF),
+ * quality compression, and width resizing. Falls back to the original URL
+ * for any non-Cloudinary image source.
+ */
+function toCloudinaryOptimized(url: string, width = 400): string {
+  if (!url || !url.includes('res.cloudinary.com')) return url;
+  // Insert transformation parameters after '/upload/'
+  return url.replace(
+    '/upload/',
+    `/upload/w_${width},f_auto,q_auto:good/`
+  );
+}
+
 const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -91,9 +105,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
         onClick={() => navigate(`/product/${product.slug}`)}
       >
         <img
-          src={product.images[0] || '/placeholder.png'}
+          src={toCloudinaryOptimized(product.images[0] || '/placeholder.png', 400)}
           alt={product.name}
-          loading="lazy"
+          loading={(index ?? 0) < 4 ? 'eager' : 'lazy'}
+          fetchPriority={(index ?? 0) < 4 ? 'high' : 'auto'}
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
