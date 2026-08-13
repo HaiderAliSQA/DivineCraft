@@ -10,13 +10,29 @@ const connectDB = async (): Promise<void> => {
 
   try {
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 30000,   // 30s to find a server
-      socketTimeoutMS: 75000,            // 75s socket idle timeout
-      connectTimeoutMS: 30000,           // 30s initial connection timeout
-      heartbeatFrequencyMS: 10000,       // ping server every 10s to stay alive
-      maxPoolSize: 10,                   // maintain up to 10 connections
-      minPoolSize: 2,                    // keep at least 2 connections alive
-      maxIdleTimeMS: 60000,              // close idle connections after 60s
+      // ── Atlas M0 (free tier) optimized settings ──────────────────────────
+      // Atlas free tier aggressively closes idle connections ~30s.
+      // These settings keep the connection alive without wasting resources.
+
+      serverSelectionTimeoutMS: 30000,  // 30s to find a primary node
+      connectTimeoutMS: 20000,          // 20s max for initial TCP handshake
+      socketTimeoutMS: 45000,           // 45s before a stalled query times out
+
+      // Heartbeat every 7s — keeps connection alive on Atlas M0
+      // (well under the ~30s idle cut-off Atlas enforces)
+      heartbeatFrequencyMS: 7000,
+
+      // Pool: 1 min so Atlas doesn't kill "extra" idle sockets,
+      // max 5 so we don't exhaust M0's 500-connection limit
+      maxPoolSize: 5,
+      minPoolSize: 1,
+
+      // Retire idle connections after 25s (just under Atlas's ~30s limit)
+      maxIdleTimeMS: 25000,
+
+      // Force IPv4 — avoids DNS resolution issues on Render.com
+      family: 4,
+
       retryWrites: true,
       retryReads: true,
     });
@@ -39,22 +55,43 @@ const connectDB = async (): Promise<void> => {
       console.warn('⚠️ Stale index cleanup warning:', idxError);
     }
 
-    mongoose.connection.on('error', (err) => {
-      console.error('MongoDB connection error:', err);
-    });
-
-    mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️  MongoDB disconnected. Attempting to reconnect...');
-    });
-
-    mongoose.connection.on('reconnected', () => {
-      console.log('✅ MongoDB reconnected');
-    });
-
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error);
     // Removed process.exit(1) to allow server to stay alive for debugging
   }
 };
+
+// ── Connection event listeners ────────────────────────────────────────────────
+// Registered ONCE at module level (not inside connectDB) so they never
+// stack up even if connectDB is called more than once.
+//
+// Atlas M0 free tier does rapid pool-socket rotations that fire
+// 'disconnected' + 'reconnected' in quick succession — this is normal
+// pool housekeeping, NOT a real outage.  We use a short debounce so only
+// genuine disconnects (lasting > 3 s) print a warning to the console.
+
+let disconnectTimer: ReturnType<typeof setTimeout> | null = null;
+
+mongoose.connection.on('disconnected', () => {
+  // Wait 3 s — if reconnected before then, stay silent (it was just pool churn)
+  disconnectTimer = setTimeout(() => {
+    console.warn('⚠️  MongoDB disconnected. Attempting to reconnect...');
+  }, 3000);
+});
+
+mongoose.connection.on('reconnected', () => {
+  // Cancel the pending disconnect warning — reconnect was fast (pool rotation)
+  if (disconnectTimer) {
+    clearTimeout(disconnectTimer);
+    disconnectTimer = null;
+  }
+  // Only log if it was a real outage (timer had already fired)
+  // We keep this silent for normal pool cycling.
+});
+
+mongoose.connection.on('error', (err) => {
+  // Always log genuine driver-level errors
+  console.error('❌ MongoDB error:', err.message);
+});
 
 export default connectDB;

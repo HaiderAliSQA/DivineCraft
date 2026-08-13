@@ -5,12 +5,13 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import App from './App';
 import './index.css';
-import { warmUpServer } from './utils/keepAlive';
+import { warmUpServer, startKeepAlive } from './utils/keepAlive';
 
-// Fire a warm-up ping to prevent Render.com cold-start delays.
-// This runs synchronously before React renders so the server has
-// maximum lead time to wake up.
+// Fire an immediate warm-up ping to prevent Render.com cold-start delays.
+// Then start a repeating ping every 13 min so the server never sleeps
+// while a user is actively on the site.
 warmUpServer();
+startKeepAlive();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
