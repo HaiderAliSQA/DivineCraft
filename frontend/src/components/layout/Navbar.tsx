@@ -279,7 +279,7 @@ const Navbar: React.FC = () => {
       <div className={`xl:hidden fixed top-0 left-0 bottom-0 w-[280px] max-w-[80vw] bg-white z-[48] shadow-2xl py-8 px-6 transform transition-transform duration-300 ease-in-out overflow-y-auto flex flex-col ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex flex-col gap-2 mt-20">
+        <div className="flex flex-col gap-2 mt-4">
           {navLinks.map((link) => {
             if (link.path.startsWith('/#')) {
               return (

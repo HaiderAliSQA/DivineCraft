@@ -256,3 +256,25 @@
 .animate-slideCartIn {
   animation: slideCartIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
+
+/* Thin custom horizontal scrollbar for categories on mobile */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 5px !important;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(61, 31, 13, 0.05) !important;
+  border-radius: 10px !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #B8860B !important; /* artisan accent gold */
+  border-radius: 10px !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #C1440E !important; /* artisan highlight red */
+}
+.custom-scrollbar {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #B8860B rgba(61, 31, 13, 0.05) !important;
+}
+

@@ -80,11 +80,11 @@ const Home: React.FC = () => {
       <StatsBar />
 
       {/* 4. PRODUCT GRID — "Aesthetic Additions" */}
-      <section className="py-20 bg-artisan-bg">
+      <section className="pt-0 pb-8 md:py-20 bg-artisan-bg">
         <div className="w-full px-4 md:px-6">
           
           {/* Section Header & Subtitle */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 md:mb-12">
             <h2 className="font-artisan-heading text-3xl md:text-4xl font-normal text-artisan-primary tracking-wide">
               Aesthetic Additions
             </h2>
@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Dynamic Category Filter bar (artisan style) */}
-          <div className="flex overflow-x-auto gap-3.5 px-2 pb-5 mb-12 no-scrollbar justify-start xl:justify-center border-b border-artisan-subtle/10">
+          <div className="flex overflow-x-auto gap-3.5 px-2 pb-3 mb-6 md:mb-12 custom-scrollbar justify-start xl:justify-center border-b border-artisan-subtle/10">
             <button 
               onClick={() => setActiveCategory('all')}
               className={`shrink-0 px-6 py-2.5 text-[12px] font-black uppercase tracking-wider transition-all duration-300 ${

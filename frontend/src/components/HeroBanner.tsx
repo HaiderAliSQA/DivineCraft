@@ -21,7 +21,7 @@ const HeroBanner: React.FC = () => {
   ];
 
   return (
-    <section className="relative w-full bg-artisan-bg overflow-hidden pt-4 pb-8 md:py-14 lg:py-16 border-b border-artisan-subtle/5">
+    <section className="relative w-full bg-artisan-bg overflow-hidden pt-4 pb-0 md:py-14 lg:py-16 border-b border-artisan-subtle/5">
       {/* Dynamic Floating & Fade-in Keyframe Animations */}
       <style>{`
         @keyframes float-up-down {
@@ -57,10 +57,10 @@ const HeroBanner: React.FC = () => {
            style={{ backgroundImage: 'radial-gradient(#1C1C1C 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
 
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
-        <div className="flex flex-col-reverse lg:flex-row items-center gap-6 lg:gap-10">
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
           
           {/* LEFT: Large Editorial Text (Orange Box - Complete & Large) */}
-          <div className="w-full lg:w-[38%] flex flex-col items-start text-left pt-2 lg:pt-0">
+          <div className="hidden lg:flex w-full lg:w-[38%] flex-col items-start text-left pt-2 lg:pt-0">
             <span className="text-[12px] md:text-[13px] font-artisan-body font-bold uppercase tracking-[0.3em] text-artisan-highlight mb-3">
               HANDMADE HERITAGE
             </span>
@@ -87,7 +87,7 @@ const HeroBanner: React.FC = () => {
           </div>
 
           {/* RIGHT: 6 Vertical Images Side-by-Side (Green Arrow & Orange Arrow space use) */}
-          <div className="w-full lg:w-[62%] relative flex items-center justify-center z-10 pt-2 pb-4 lg:py-8">
+          <div className="w-full lg:w-[62%] relative flex items-center justify-center z-10 pt-0 pb-0 lg:py-8">
             {/* Background gold glow accent */}
             <div className="absolute w-[90%] aspect-square bg-artisan-accent/5 blur-[90px] rounded-full z-0 pointer-events-none"></div>
             
@@ -95,9 +95,7 @@ const HeroBanner: React.FC = () => {
               {imagePairs.map((pair, i) => (
                 <div 
                   key={i} 
-                  className={`relative overflow-hidden border border-artisan-primary/10 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-md h-[220px] sm:h-[340px] lg:h-[480px] w-full ${
-                    i >= 3 ? 'hidden sm:block' : ''
-                  } ${
+                  className={`relative overflow-hidden border border-artisan-primary/10 shadow-sm transition-all duration-500 hover:scale-[1.05] hover:shadow-md h-[150px] sm:h-[340px] lg:h-[480px] w-full ${
                     i === 0 ? 'lg:-translate-y-8' : 
                     i === 1 ? 'lg:-translate-y-3' : 
                     i === 2 ? 'lg:translate-y-2' : 

@@ -9,7 +9,7 @@ const StatsBar: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[#FAF0E6] border-y border-artisan-subtle/10 py-10 relative z-10">
+    <section className="hidden md:block bg-[#FAF0E6] border-y border-artisan-subtle/10 py-10 relative z-10">
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-artisan-subtle/20">
           {stats.map((stat, index) => (
